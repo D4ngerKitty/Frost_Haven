@@ -225,6 +225,9 @@ controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 function createlevel (num: number) {
+    sprites.destroyAllSpritesOfKind(SpriteKind.npc)
+    sprites.destroyAllSpritesOfKind(SpriteKind.background)
+    zone = num
     if (num == 0) {
         tiles.setCurrentTilemap(tilemap`level3`)
         mySprite2 = sprites.create(img`
@@ -1889,6 +1892,8 @@ function createlevel (num: number) {
             tiles.setTileAt(value, assets.tile`transparency16`)
             tiles.placeOnTile(mySprite4, value)
         }
+    } else if (num == 1) {
+        tiles.setCurrentTilemap(tilemap`level4`)
     }
 }
 function createplayer () {
@@ -2653,6 +2658,20 @@ function update_this_lists () {
     console.log(theinvantorylist)
     console.log(theAbutton)
 }
+function moveBeteewnleveles () {
+    if (zone == 0) {
+        if (mySprite.tilemapLocation().column == 84 && mySprite.isHittingTile(CollisionDirection.Right)) {
+            createlevel(1)
+            tiles.placeOnTile(mySprite, tiles.getTileLocation(0, 37))
+        }
+    }
+    if (zone == 1) {
+        if (mySprite.tilemapLocation().column == 0 && mySprite.isHittingTile(CollisionDirection.Left)) {
+            createlevel(0)
+            tiles.placeOnTile(mySprite, tiles.getTileLocation(84, 11))
+        }
+    }
+}
 function add_item (text: string, myImage: Image, text2: string, num: number) {
     items_images.push(myImage)
     items_names.push(text)
@@ -2961,6 +2980,7 @@ let mySprite5: Sprite = null
 let mySprite4: Sprite = null
 let mySprite3: Sprite = null
 let mySprite2: Sprite = null
+let zone = 0
 let thelifesprtie: Sprite = null
 let maxPLayerLife = 0
 let playerlife = 0
@@ -3373,4 +3393,5 @@ forever(function () {
     }
     selceontype = item_type[sprites.readDataNumber(sprites.readDataSprite(invantory, "" + sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection")), "item_id")]
     selected_item = sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection")
+    moveBeteewnleveles()
 })

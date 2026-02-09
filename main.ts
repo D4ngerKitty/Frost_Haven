@@ -202,28 +202,6 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         move_item()
     }
 })
-controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (can_open_menu) {
-        if (menu_open) {
-            menu_open = false
-            update_invantory(theinvantorylist)
-            if (!(incutesence)) {
-                platformer.moveSprite(mySprite, false, 100)
-            }
-        } else {
-            menu_open = true
-            if (!(incutesence)) {
-                platformer.moveSprite(mySprite, true, 100)
-            }
-        }
-        for (let value of sprites.allOfKind(SpriteKind.ivantorybit)) {
-            value.setFlag(SpriteFlag.Invisible, menu_open)
-        }
-        for (let value of sprites.allOfKind(SpriteKind.item_slot)) {
-            value.setFlag(SpriteFlag.Invisible, menu_open)
-        }
-    }
-})
 function createlevel (num: number) {
     sprites.destroyAllSpritesOfKind(SpriteKind.npc)
     sprites.destroyAllSpritesOfKind(SpriteKind.background)
@@ -2107,6 +2085,28 @@ function createlevel (num: number) {
         }
     }
 }
+browserEvents.Shift.onEvent(browserEvents.KeyEvent.Pressed, function () {
+    if (can_open_menu) {
+        if (menu_open) {
+            menu_open = false
+            update_invantory(theinvantorylist)
+            if (!(incutesence)) {
+                platformer.moveSprite(mySprite, false, 100)
+            }
+        } else {
+            menu_open = true
+            if (!(incutesence)) {
+                platformer.moveSprite(mySprite, true, 100)
+            }
+        }
+        for (let value of sprites.allOfKind(SpriteKind.ivantorybit)) {
+            value.setFlag(SpriteFlag.Invisible, menu_open)
+        }
+        for (let value of sprites.allOfKind(SpriteKind.item_slot)) {
+            value.setFlag(SpriteFlag.Invisible, menu_open)
+        }
+    }
+})
 function createplayer () {
     mySprite = platformer.create(img`
         . . . . . . . . . . . . . . . . 
@@ -2126,6 +2126,7 @@ function createplayer () {
         . . . . . . 4 . . 4 . . . . . . 
         . . . . . . 4 . . 4 . . . . . . 
         `, SpriteKind.Player)
+    playersleep = 100
     platformer.moveSprite(mySprite, false, 100)
     platformer.setFeatureEnabled(platformer.PlatformerFeatures.JumpOnAPressed, false)
     platformer.setFeatureEnabled(platformer.PlatformerFeatures.JumpOnUpPressed, true)
@@ -2586,6 +2587,8 @@ function createplayer () {
     100,
     true
     )
+    platformer.setConstantDefault(platformer.PlatformerConstant.InAirJumps, 1)
+    platformer.setConstantDefault(platformer.PlatformerConstant.InAirJumpHeight, 40)
 }
 function introtext (text: string) {
     NPCtext = fancyText.create(text, 150, 1, fancyText.rounded_small)
@@ -3187,6 +3190,7 @@ let path: TilemapPath.TilemapPath = null
 let items_names: string[] = []
 let selected_item = 0
 let selceontype = ""
+let playersleep = 0
 let mySprite5: Sprite = null
 let mySprite4: Sprite = null
 let mySprite3: Sprite = null

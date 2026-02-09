@@ -15,7 +15,8 @@
         "RegularBlock 4 by Luke (font)": "pub:53643-88639-48823-13052",
         "RED LINE 6 by Luke (font)": "pub:05985-63882-95475-60702",
         "Stats": "github:UnsignedArduino/Stats#758e35856bd5565e5d0e25c95cccfac79b7fc168",
-        "arcade-sprite-util": "github:jwunderl/arcade-sprite-util#v0.5.0"
+        "arcade-sprite-util": "github:jwunderl/arcade-sprite-util#v0.5.0",
+        "browser-events": "*"
     },
     "files": [
         "main.blocks",

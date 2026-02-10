@@ -75,6 +75,9 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
         fancyText.cancelAnimation(NPCtext)
     }
 })
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+	
+})
 function set_item_at_num_to_num (num: number, num2: number) {
     sprites.setDataNumber(sprites.readDataSprite(invantory, "" + num), "item_id", num2)
     sprites.readDataSprite(invantory, "" + num).setImage(items_images[num2])
@@ -119,6 +122,11 @@ function MakeNPCText (text: string) {
     sprites.destroy(NPCtext)
     can_open_menu = true
 }
+browserEvents.Z.onEvent(browserEvents.KeyEvent.Pressed, function () {
+    if (!(menu_open)) {
+        move_item()
+    }
+})
 function create_ui () {
     incutesence = false
     can_open_menu = true
@@ -197,11 +205,6 @@ function create_ui () {
     thelifesprtie.setPosition(16, 29)
     thelifesprtie.z = 100
 }
-controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (!(menu_open)) {
-        move_item()
-    }
-})
 function createlevel (num: number) {
     sprites.destroyAllSpritesOfKind(SpriteKind.npc)
     sprites.destroyAllSpritesOfKind(SpriteKind.background)
@@ -2085,28 +2088,6 @@ function createlevel (num: number) {
         }
     }
 }
-browserEvents.Shift.onEvent(browserEvents.KeyEvent.Pressed, function () {
-    if (can_open_menu) {
-        if (menu_open) {
-            menu_open = false
-            update_invantory(theinvantorylist)
-            if (!(incutesence)) {
-                platformer.moveSprite(mySprite, false, 100)
-            }
-        } else {
-            menu_open = true
-            if (!(incutesence)) {
-                platformer.moveSprite(mySprite, true, 100)
-            }
-        }
-        for (let value of sprites.allOfKind(SpriteKind.ivantorybit)) {
-            value.setFlag(SpriteFlag.Invisible, menu_open)
-        }
-        for (let value of sprites.allOfKind(SpriteKind.item_slot)) {
-            value.setFlag(SpriteFlag.Invisible, menu_open)
-        }
-    }
-})
 function createplayer () {
     mySprite = platformer.create(img`
         . . . . . . . . . . . . . . . . 
@@ -2861,6 +2842,9 @@ function START_CUTSENSE () {
     MakeNPCText("I've tought you everything i can, now go forword into the world young one")
     create_ui()
 }
+browserEvents.C.onEvent(browserEvents.KeyEvent.Pressed, function () {
+	
+})
 function update_this_lists () {
     theinvantorylist = []
     for (let index = 0; index <= 15; index++) {
@@ -2891,6 +2875,28 @@ function add_item (text: string, myImage: Image, text2: string, num: number) {
     items_names.push(text)
     item_type.push(text2)
 }
+browserEvents.E.onEvent(browserEvents.KeyEvent.Pressed, function () {
+    if (can_open_menu) {
+        if (menu_open) {
+            menu_open = false
+            update_invantory(theinvantorylist)
+            if (!(incutesence)) {
+                platformer.moveSprite(mySprite, false, 100)
+            }
+        } else {
+            menu_open = true
+            if (!(incutesence)) {
+                platformer.moveSprite(mySprite, true, 100)
+            }
+        }
+        for (let value of sprites.allOfKind(SpriteKind.ivantorybit)) {
+            value.setFlag(SpriteFlag.Invisible, menu_open)
+        }
+        for (let value of sprites.allOfKind(SpriteKind.item_slot)) {
+            value.setFlag(SpriteFlag.Invisible, menu_open)
+        }
+    }
+})
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     if (!(menu_open)) {
         move_selector(4, "down")
@@ -3288,6 +3294,24 @@ let assests = [img`
     . . 5 5 5 5 5 5 5 5 8 . . . . . 
     . . 5 5 5 5 5 5 5 5 8 . . . . . 
     . . 5 5 5 5 5 5 5 8 5 . . . . . 
+    `]
+let map_layouts = [img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
     `]
 if (false) {
     timer.background(function () {

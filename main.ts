@@ -2128,8 +2128,8 @@ function createplayer () {
         `, SpriteKind.Player)
     playersleep = 100
     platformer.moveSprite(mySprite, false, 100)
-    platformer.setFeatureEnabled(platformer.PlatformerFeatures.JumpOnAPressed, false)
-    platformer.setFeatureEnabled(platformer.PlatformerFeatures.JumpOnUpPressed, true)
+    platformer.setFeatureEnabled(platformer.PlatformerFeatures.JumpOnAPressed, true)
+    platformer.setFeatureEnabled(platformer.PlatformerFeatures.JumpOnUpPressed, false)
     platformer.loopFrames(
     mySprite,
     [img`

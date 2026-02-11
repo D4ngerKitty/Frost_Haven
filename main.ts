@@ -3388,7 +3388,7 @@ forever(function () {
     if (canrun) {
         if (browserEvents.X.isPressed()) {
             if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
-                platformer.moveSprite(mySprite, true, 120)
+                platformer.moveSprite(mySprite, true, 130)
                 platformer.loopFrames(
                 mySprite,
                 [img`
@@ -3540,8 +3540,14 @@ forever(function () {
                 if (tiles.tileImageAtLocation(mySprite.tilemapLocation()).getPixel(0, 15) == 1) {
                     if (browserEvents.ArrowLeft.isPressed()) {
                         extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(1, ExtraEffectPresetShape.Twinkle), mySprite.x, mySprite.y + 5, 500, 5, 1)
+                        timer.throttle("action", 200, function () {
+                            music.play(music.createSoundEffect(WaveShape.Noise, 968, 46, 128, 0, 50, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
+                        })
                     } else if (browserEvents.ArrowRight.isPressed()) {
                         extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(1, ExtraEffectPresetShape.Twinkle), mySprite.x, mySprite.y + 5, 200, 5, 1)
+                        timer.throttle("action", 200, function () {
+                            music.play(music.createSoundEffect(WaveShape.Noise, 968, 46, 128, 0, 50, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
+                        })
                     }
                 }
             } else {

@@ -131,73 +131,6 @@ function MakeNPCText (text: string) {
     sprites.destroy(NPCtext)
     can_open_menu = true
 }
-browserEvents.Z.onEvent(browserEvents.KeyEvent.Pressed, function () {
-    if (!(menu_open)) {
-        move_item()
-    }
-    if (!(lockcontrols)) {
-        if (mainstartmenu) {
-            if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 1) {
-                mainstartmenu = false
-                sprites.destroy(main_menu_text)
-                sprites.destroy(sprites.readDataSprite(main_menu_text, "1"))
-                sprites.destroy(sprites.readDataSprite(main_menu_text, "2"))
-                sprites.destroy(sprites.readDataSprite(main_menu_text, "3"))
-                sprites.destroy(sprites.readDataSprite(main_menu_text, "4"))
-                timer.background(function () {
-                    if (blockSettings.exists("checkpoint_zone_in_data")) {
-                        scene.cameraFollowSprite(cam)
-                        create_ui()
-                        canrun = true
-                        createlevel(blockSettings.readNumber("checkpoint_zone_in_data"))
-                        tiles.placeOnRandomTile(mySprite, assets.tile`myTile46`)
-                    } else {
-                        START_CUTSENSE()
-                    }
-                })
-            } else if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 4) {
-                lockcontrols = true
-                fancyText.setColor(main_menu_text, 0)
-                pause(100)
-                fancyText.setColor(sprites.readDataSprite(main_menu_text, "1"), 0)
-                pause(100)
-                fancyText.setColor(sprites.readDataSprite(main_menu_text, "2"), 0)
-                pause(100)
-                fancyText.setColor(sprites.readDataSprite(main_menu_text, "3"), 0)
-                pause(100)
-                fancyText.setColor(sprites.readDataSprite(main_menu_text, "4"), 0)
-                pause(100)
-                blockSettings.clear()
-                game.reset()
-            } else if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 3) {
-                timer.background(function () {
-                    lockcontrols = true
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "1"), 0)
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "2"), 0)
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "3"), 0)
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "4"), 0)
-                    pause(200)
-                    fancyText.setText(sprites.readDataSprite(main_menu_text, "1"), "game made by")
-                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "1"), tiles.getTileLocation(7, 3))
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "1"), 2)
-                    pause(200)
-                    fancyText.setText(sprites.readDataSprite(main_menu_text, "2"), "DangerKitty")
-                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "2"), tiles.getTileLocation(7, 4))
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "2"), 2)
-                    pause(200)
-                    fancyText.setText(sprites.readDataSprite(main_menu_text, "3"), "playtesters gid")
-                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "3"), tiles.getTileLocation(7, 5))
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "3"), 2)
-                    pause(200)
-                    while (!(browserEvents.Z.isPressed())) {
-                        pause(10)
-                    }
-                    game.reset()
-                })
-            }
-        }
-    }
-})
 function create_ui () {
     incutesence = false
     can_open_menu = true
@@ -3207,6 +3140,77 @@ function add_item (text: string, myImage: Image, text2: string, num: number) {
     items_names.push(text)
     item_type.push(text2)
 }
+browserEvents.Z.onEvent(browserEvents.KeyEvent.Pressed, function () {
+    if (!(menu_open)) {
+        move_item()
+    }
+    if (!(lockcontrols)) {
+        if (mainstartmenu) {
+            if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 1) {
+                mainstartmenu = false
+                sprites.destroy(main_menu_text)
+                sprites.destroy(sprites.readDataSprite(main_menu_text, "1"))
+                sprites.destroy(sprites.readDataSprite(main_menu_text, "2"))
+                sprites.destroy(sprites.readDataSprite(main_menu_text, "3"))
+                sprites.destroy(sprites.readDataSprite(main_menu_text, "4"))
+                timer.background(function () {
+                    if (blockSettings.exists("checkpoint_zone_in_data")) {
+                        scene.cameraFollowSprite(cam)
+                        create_ui()
+                        canrun = true
+                        createlevel(blockSettings.readNumber("checkpoint_zone_in_data"))
+                        tiles.placeOnRandomTile(mySprite, assets.tile`myTile46`)
+                    } else {
+                        START_CUTSENSE()
+                    }
+                })
+            } else if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 4) {
+                lockcontrols = true
+                fancyText.setColor(main_menu_text, 0)
+                pause(100)
+                fancyText.setColor(sprites.readDataSprite(main_menu_text, "1"), 0)
+                pause(100)
+                fancyText.setColor(sprites.readDataSprite(main_menu_text, "2"), 0)
+                pause(100)
+                fancyText.setColor(sprites.readDataSprite(main_menu_text, "3"), 0)
+                pause(100)
+                fancyText.setColor(sprites.readDataSprite(main_menu_text, "4"), 0)
+                pause(100)
+                blockSettings.clear()
+                game.reset()
+            } else if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 3) {
+                timer.background(function () {
+                    lockcontrols = true
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "1"), 0)
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "2"), 0)
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "3"), 0)
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "4"), 0)
+                    pause(200)
+                    fancyText.setText(sprites.readDataSprite(main_menu_text, "1"), "game made by")
+                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "1"), tiles.getTileLocation(7, 3))
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "1"), 2)
+                    pause(200)
+                    fancyText.setText(sprites.readDataSprite(main_menu_text, "2"), "DangerKitty")
+                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "2"), tiles.getTileLocation(7, 4))
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "2"), 2)
+                    pause(200)
+                    fancyText.setText(sprites.readDataSprite(main_menu_text, "3"), "playtesters:")
+                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "3"), tiles.getTileLocation(7, 5))
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "3"), 2)
+                    pause(200)
+                    fancyText.setText(sprites.readDataSprite(main_menu_text, "4"), " gid and luke")
+                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "4"), tiles.getTileLocation(7, 6))
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "4"), 2)
+                    pause(200)
+                    while (!(browserEvents.Z.isPressed())) {
+                        pause(10)
+                    }
+                    game.reset()
+                })
+            }
+        }
+    }
+})
 browserEvents.E.onEvent(browserEvents.KeyEvent.Pressed, function () {
     if (can_open_menu) {
         if (menu_open) {

@@ -79,6 +79,7 @@ browserEvents.ArrowDown.onEvent(browserEvents.KeyEvent.Pressed, function () {
                 sprites.setDataNumber(main_menu_text, "menu_item_picked", 1)
             }
             fancyText.setColor(sprites.readDataSprite(main_menu_text, "" + sprites.readDataNumber(main_menu_text, "menu_item_picked")), 3)
+            music.play(music.createSoundEffect(WaveShape.Square, 1110, 0, 142, 0, 100, SoundExpressionEffect.Vibrato, InterpolationCurve.Logarithmic), music.PlaybackMode.InBackground)
         }
     }
 })
@@ -131,6 +132,80 @@ function MakeNPCText (text: string) {
     sprites.destroy(NPCtext)
     can_open_menu = true
 }
+browserEvents.Z.onEvent(browserEvents.KeyEvent.Pressed, function () {
+    if (!(menu_open)) {
+        move_item()
+    }
+    if (!(lockcontrols)) {
+        if (mainstartmenu) {
+            if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 1) {
+                music.play(music.createSoundEffect(WaveShape.Square, 1857, 1, 19, 173, 100, SoundExpressionEffect.Vibrato, InterpolationCurve.Curve), music.PlaybackMode.InBackground)
+                mainstartmenu = false
+                sprites.destroy(main_menu_text)
+                sprites.destroy(sprites.readDataSprite(main_menu_text, "1"))
+                sprites.destroy(sprites.readDataSprite(main_menu_text, "2"))
+                sprites.destroy(sprites.readDataSprite(main_menu_text, "3"))
+                sprites.destroy(sprites.readDataSprite(main_menu_text, "4"))
+                timer.background(function () {
+                    if (blockSettings.exists("checkpoint_zone_in_data")) {
+                        scene.cameraFollowSprite(cam)
+                        create_ui()
+                        canrun = true
+                        createlevel(blockSettings.readNumber("checkpoint_zone_in_data"))
+                        tiles.placeOnRandomTile(mySprite, assets.tile`myTile46`)
+                    } else {
+                        START_CUTSENSE()
+                    }
+                })
+            } else if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 4) {
+                music.play(music.createSoundEffect(WaveShape.Square, 1857, 1, 19, 173, 100, SoundExpressionEffect.Vibrato, InterpolationCurve.Curve), music.PlaybackMode.InBackground)
+                lockcontrols = true
+                fancyText.setColor(main_menu_text, 0)
+                pause(100)
+                fancyText.setColor(sprites.readDataSprite(main_menu_text, "1"), 0)
+                pause(100)
+                fancyText.setColor(sprites.readDataSprite(main_menu_text, "2"), 0)
+                pause(100)
+                fancyText.setColor(sprites.readDataSprite(main_menu_text, "3"), 0)
+                pause(100)
+                fancyText.setColor(sprites.readDataSprite(main_menu_text, "4"), 0)
+                pause(100)
+                blockSettings.clear()
+                game.reset()
+            } else if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 3) {
+                timer.background(function () {
+                    music.play(music.createSoundEffect(WaveShape.Square, 1857, 1, 19, 173, 100, SoundExpressionEffect.Vibrato, InterpolationCurve.Curve), music.PlaybackMode.InBackground)
+                    lockcontrols = true
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "1"), 0)
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "2"), 0)
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "3"), 0)
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "4"), 0)
+                    pause(200)
+                    fancyText.setText(sprites.readDataSprite(main_menu_text, "1"), "game made by")
+                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "1"), tiles.getTileLocation(7, 3))
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "1"), 2)
+                    pause(200)
+                    fancyText.setText(sprites.readDataSprite(main_menu_text, "2"), "DangerKitty")
+                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "2"), tiles.getTileLocation(7, 4))
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "2"), 2)
+                    pause(200)
+                    fancyText.setText(sprites.readDataSprite(main_menu_text, "3"), "playtesters:")
+                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "3"), tiles.getTileLocation(7, 5))
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "3"), 2)
+                    pause(200)
+                    fancyText.setText(sprites.readDataSprite(main_menu_text, "4"), "luke")
+                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "4"), tiles.getTileLocation(7, 6))
+                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "4"), 2)
+                    pause(200)
+                    while (!(browserEvents.Z.isPressed())) {
+                        pause(10)
+                    }
+                    game.reset()
+                })
+            }
+        }
+    }
+})
 function create_ui () {
     incutesence = false
     can_open_menu = true
@@ -2848,9 +2923,34 @@ browserEvents.ArrowUp.onEvent(browserEvents.KeyEvent.Pressed, function () {
                 sprites.setDataNumber(main_menu_text, "menu_item_picked", 4)
             }
             fancyText.setColor(sprites.readDataSprite(main_menu_text, "" + sprites.readDataNumber(main_menu_text, "menu_item_picked")), 3)
+            music.play(music.createSoundEffect(WaveShape.Square, 1110, 0, 142, 0, 100, SoundExpressionEffect.Vibrato, InterpolationCurve.Logarithmic), music.PlaybackMode.InBackground)
         }
     }
 })
+function pull_up_invantory () {
+    if (can_open_menu) {
+        music.play(music.createSoundEffect(WaveShape.Square, 1857, 1, 19, 173, 100, SoundExpressionEffect.Vibrato, InterpolationCurve.Curve), music.PlaybackMode.InBackground)
+        if (menu_open) {
+            menu_open = false
+            update_invantory(theinvantorylist)
+            if (!(incutesence)) {
+                canrun = false
+                platformer.moveSprite(mySprite, false)
+            }
+        } else {
+            menu_open = true
+            if (!(incutesence)) {
+                canrun = true
+            }
+        }
+        for (let value of sprites.allOfKind(SpriteKind.ivantorybit)) {
+            value.setFlag(SpriteFlag.Invisible, menu_open)
+        }
+        for (let value of sprites.allOfKind(SpriteKind.item_slot)) {
+            value.setFlag(SpriteFlag.Invisible, menu_open)
+        }
+    }
+}
 function hadle_items () {
     items_images = []
     items_names = []
@@ -2982,7 +3082,7 @@ function hadle_items () {
         . . . . . . . . . . . . . . . . 
         `, "cloak", 6)
     if (!(blockSettings.exists("the invantory"))) {
-        blockSettings.writeNumberArray("the invantory", [0])
+        blockSettings.writeNumberArray("the invantory", [0, 1])
         blockSettings.writeNumber("theAbutton", -1)
         blockSettings.writeNumber("thecloakslot", 6)
         blockSettings.writeNumber("theBbutton", -1)
@@ -3007,8 +3107,12 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
         move_selector(1, "right")
     }
 })
+controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
+    pull_up_invantory()
+})
 function move_selector (num: number, text: string) {
     if (true) {
+        music.play(music.createSoundEffect(WaveShape.Square, 1110, 0, 142, 0, 100, SoundExpressionEffect.Vibrato, InterpolationCurve.Logarithmic), music.PlaybackMode.InBackground)
         sprites.changeDataNumberBy(sprites.readDataSprite(invantory, "sealector"), "selection", num)
         if (sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection") >= 16) {
             if (text == "down") {
@@ -3140,99 +3244,8 @@ function add_item (text: string, myImage: Image, text2: string, num: number) {
     items_names.push(text)
     item_type.push(text2)
 }
-browserEvents.Z.onEvent(browserEvents.KeyEvent.Pressed, function () {
-    if (!(menu_open)) {
-        move_item()
-    }
-    if (!(lockcontrols)) {
-        if (mainstartmenu) {
-            if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 1) {
-                mainstartmenu = false
-                sprites.destroy(main_menu_text)
-                sprites.destroy(sprites.readDataSprite(main_menu_text, "1"))
-                sprites.destroy(sprites.readDataSprite(main_menu_text, "2"))
-                sprites.destroy(sprites.readDataSprite(main_menu_text, "3"))
-                sprites.destroy(sprites.readDataSprite(main_menu_text, "4"))
-                timer.background(function () {
-                    if (blockSettings.exists("checkpoint_zone_in_data")) {
-                        scene.cameraFollowSprite(cam)
-                        create_ui()
-                        canrun = true
-                        createlevel(blockSettings.readNumber("checkpoint_zone_in_data"))
-                        tiles.placeOnRandomTile(mySprite, assets.tile`myTile46`)
-                    } else {
-                        START_CUTSENSE()
-                    }
-                })
-            } else if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 4) {
-                lockcontrols = true
-                fancyText.setColor(main_menu_text, 0)
-                pause(100)
-                fancyText.setColor(sprites.readDataSprite(main_menu_text, "1"), 0)
-                pause(100)
-                fancyText.setColor(sprites.readDataSprite(main_menu_text, "2"), 0)
-                pause(100)
-                fancyText.setColor(sprites.readDataSprite(main_menu_text, "3"), 0)
-                pause(100)
-                fancyText.setColor(sprites.readDataSprite(main_menu_text, "4"), 0)
-                pause(100)
-                blockSettings.clear()
-                game.reset()
-            } else if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 3) {
-                timer.background(function () {
-                    lockcontrols = true
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "1"), 0)
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "2"), 0)
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "3"), 0)
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "4"), 0)
-                    pause(200)
-                    fancyText.setText(sprites.readDataSprite(main_menu_text, "1"), "game made by")
-                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "1"), tiles.getTileLocation(7, 3))
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "1"), 2)
-                    pause(200)
-                    fancyText.setText(sprites.readDataSprite(main_menu_text, "2"), "DangerKitty")
-                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "2"), tiles.getTileLocation(7, 4))
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "2"), 2)
-                    pause(200)
-                    fancyText.setText(sprites.readDataSprite(main_menu_text, "3"), "playtesters:")
-                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "3"), tiles.getTileLocation(7, 5))
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "3"), 2)
-                    pause(200)
-                    fancyText.setText(sprites.readDataSprite(main_menu_text, "4"), " gid and luke")
-                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "4"), tiles.getTileLocation(7, 6))
-                    fancyText.setColor(sprites.readDataSprite(main_menu_text, "4"), 2)
-                    pause(200)
-                    while (!(browserEvents.Z.isPressed())) {
-                        pause(10)
-                    }
-                    game.reset()
-                })
-            }
-        }
-    }
-})
 browserEvents.E.onEvent(browserEvents.KeyEvent.Pressed, function () {
-    if (can_open_menu) {
-        if (menu_open) {
-            menu_open = false
-            update_invantory(theinvantorylist)
-            if (!(incutesence)) {
-                canrun = false
-                platformer.moveSprite(mySprite, false)
-            }
-        } else {
-            menu_open = true
-            if (!(incutesence)) {
-                canrun = true
-            }
-        }
-        for (let value of sprites.allOfKind(SpriteKind.ivantorybit)) {
-            value.setFlag(SpriteFlag.Invisible, menu_open)
-        }
-        for (let value of sprites.allOfKind(SpriteKind.item_slot)) {
-            value.setFlag(SpriteFlag.Invisible, menu_open)
-        }
-    }
+    pull_up_invantory()
 })
 function create_invatnotory_slots (num: number) {
     for (let index = 0; index <= num; index++) {

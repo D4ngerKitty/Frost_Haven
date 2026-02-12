@@ -6,6 +6,7 @@ namespace SpriteKind {
     export const background = SpriteKind.create()
     export const npc = SpriteKind.create()
     export const typepartical = SpriteKind.create()
+    export const savepoint = SpriteKind.create()
 }
 function update_invantory (array: any[]) {
     number = 0
@@ -66,9 +67,17 @@ function update_invantory (array: any[]) {
         sprites.setDataString(sprites.readDataSprite(invantory, "talismanslot"), "item_type", "blank")
     }
 }
-controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+browserEvents.ArrowDown.onEvent(browserEvents.KeyEvent.Pressed, function () {
     if (!(menu_open)) {
-        move_selector(-4, "up")
+        move_selector(4, "down")
+    }
+    if (mainstartmenu) {
+        fancyText.setColor(sprites.readDataSprite(main_menu_text, "" + sprites.readDataNumber(main_menu_text, "menu_item_picked")), 4)
+        sprites.changeDataNumberBy(main_menu_text, "menu_item_picked", 1)
+        if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 5) {
+            sprites.setDataNumber(main_menu_text, "menu_item_picked", 1)
+        }
+        fancyText.setColor(sprites.readDataSprite(main_menu_text, "" + sprites.readDataNumber(main_menu_text, "menu_item_picked")), 3)
     }
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -123,6 +132,19 @@ function MakeNPCText (text: string) {
 browserEvents.Z.onEvent(browserEvents.KeyEvent.Pressed, function () {
     if (!(menu_open)) {
         move_item()
+    }
+    if (mainstartmenu) {
+        if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 1) {
+            mainstartmenu = false
+            sprites.destroy(main_menu_text)
+            sprites.destroy(sprites.readDataSprite(main_menu_text, "1"))
+            sprites.destroy(sprites.readDataSprite(main_menu_text, "2"))
+            sprites.destroy(sprites.readDataSprite(main_menu_text, "3"))
+            sprites.destroy(sprites.readDataSprite(main_menu_text, "4"))
+            timer.background(function () {
+                START_CUTSENSE()
+            })
+        }
     }
 })
 function create_ui () {
@@ -222,6 +244,7 @@ browserEvents.X.onEvent(browserEvents.KeyEvent.Pressed, function () {
 function createlevel (num: number) {
     sprites.destroyAllSpritesOfKind(SpriteKind.npc)
     sprites.destroyAllSpritesOfKind(SpriteKind.background)
+    sprites.destroyAllSpritesOfKind(SpriteKind.savepoint)
     zone = num
     if (num == 0) {
         tiles.setCurrentTilemap(tilemap`level3`)
@@ -2101,6 +2124,222 @@ function createlevel (num: number) {
             tiles.placeOnTile(mySprite4, value)
         }
     }
+    for (let value of tiles.getTilesByType(assets.tile`myTile46`)) {
+        check_point = sprites.create(img`
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . 8 4 5 4 4 5 4 8 . . . . 
+            . . . 8 4 5 4 4 4 4 5 4 8 . . . 
+            . . . 8 4 5 4 4 4 4 5 4 8 . . . 
+            . . . . 8 4 5 4 4 5 4 8 . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.savepoint)
+        sprites.setDataNumber(check_point, "zone_in", zone + 0)
+        check_point.z = -1
+        tiles.placeOnTile(check_point, value)
+        animation.runImageAnimation(
+        check_point,
+        [img`
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . 8 4 5 4 4 5 4 8 . . . . 
+            . . . 8 4 5 4 4 4 4 5 4 8 . . . 
+            . . . 8 4 5 4 4 4 4 5 4 8 . . . 
+            . . . . 8 4 5 4 4 5 4 8 . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . 8 4 5 4 4 5 4 8 . . . . 
+            . . . 8 4 5 4 4 4 4 5 4 8 . . . 
+            . . . 8 4 5 4 4 4 4 5 4 8 . . . 
+            . . . . 8 4 5 4 4 5 4 8 . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . 8 4 5 4 4 5 4 8 . . . . 
+            . . . 8 4 5 4 4 4 4 5 4 8 . . . 
+            . . . 8 4 5 4 4 4 4 5 4 8 . . . 
+            . . . . 8 4 5 4 4 5 4 8 . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . 8 4 5 4 4 5 4 8 . . . . 
+            . . . 8 4 5 4 3 3 4 5 4 8 . . . 
+            . . . 8 4 5 4 3 3 4 5 4 8 . . . 
+            . . . . 8 4 5 4 4 5 4 8 . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . 8 4 5 3 3 5 4 8 . . . . 
+            . . . 8 4 5 3 3 3 3 5 4 8 . . . 
+            . . . 8 4 5 3 3 3 3 5 4 8 . . . 
+            . . . . 8 4 5 3 3 5 4 8 . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . 8 4 2 2 4 8 . . . . . 
+            . . . . 8 4 2 3 3 2 4 8 . . . . 
+            . . . 8 4 2 3 3 3 3 2 4 8 . . . 
+            . . . 8 4 2 3 3 3 3 2 4 8 . . . 
+            . . . . 8 4 2 3 3 2 4 8 . . . . 
+            . . . . . 8 4 2 2 4 8 . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . 8 3 3 8 . . . . . . 
+            . . . . . 8 3 2 2 3 8 . . . . . 
+            . . . . 8 3 2 3 3 2 3 8 . . . . 
+            . . . 8 3 2 3 3 3 3 2 3 8 . . . 
+            . . . 8 3 2 3 3 3 3 2 3 8 . . . 
+            . . . . 8 3 2 3 3 2 3 8 . . . . 
+            . . . . . 8 3 2 2 3 8 . . . . . 
+            . . . . . . 8 3 3 8 . . . . . . 
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . 8 3 3 8 . . . . . . 
+            . . . . . 8 3 2 2 3 8 . . . . . 
+            . . . . 8 3 2 3 3 2 3 8 . . . . 
+            . . . 8 3 2 3 3 3 3 2 3 8 . . . 
+            . . . 8 3 2 3 3 3 3 2 3 8 . . . 
+            . . . . 8 3 2 3 3 2 3 8 . . . . 
+            . . . . . 8 3 2 2 3 8 . . . . . 
+            . . . . . . 8 3 3 8 . . . . . . 
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . 8 4 2 2 4 8 . . . . . 
+            . . . . 8 4 2 3 3 2 4 8 . . . . 
+            . . . 8 4 2 3 3 3 3 2 4 8 . . . 
+            . . . 8 4 2 3 3 3 3 2 4 8 . . . 
+            . . . . 8 4 2 3 3 2 4 8 . . . . 
+            . . . . . 8 4 2 2 4 8 . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . 8 4 5 3 3 5 4 8 . . . . 
+            . . . 8 4 5 3 3 3 3 5 4 8 . . . 
+            . . . 8 4 5 3 3 3 3 5 4 8 . . . 
+            . . . . 8 4 5 3 3 5 4 8 . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . 8 4 5 4 4 5 4 8 . . . . 
+            . . . 8 4 5 4 3 3 4 5 4 8 . . . 
+            . . . 8 4 5 4 3 3 4 5 4 8 . . . 
+            . . . . 8 4 5 4 4 5 4 8 . . . . 
+            . . . . . 8 4 5 5 4 8 . . . . . 
+            . . . . . . 8 4 4 8 . . . . . . 
+            . . . . . . . 8 8 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `],
+        100,
+        true
+        )
+    }
 }
 function dash (howfar: number, durection: number) {
     platformer.setGravity(0)
@@ -2612,6 +2851,19 @@ function move_item () {
     update_this_lists()
     update_invantory(theinvantorylist)
 }
+browserEvents.ArrowUp.onEvent(browserEvents.KeyEvent.Pressed, function () {
+    if (!(menu_open)) {
+        move_selector(-4, "up")
+    }
+    if (mainstartmenu) {
+        fancyText.setColor(sprites.readDataSprite(main_menu_text, "" + sprites.readDataNumber(main_menu_text, "menu_item_picked")), 4)
+        sprites.changeDataNumberBy(main_menu_text, "menu_item_picked", -1)
+        if (sprites.readDataNumber(main_menu_text, "menu_item_picked") == 0) {
+            sprites.setDataNumber(main_menu_text, "menu_item_picked", 4)
+        }
+        fancyText.setColor(sprites.readDataSprite(main_menu_text, "" + sprites.readDataNumber(main_menu_text, "menu_item_picked")), 3)
+    }
+})
 function hadle_items () {
     items_images = []
     items_names = []
@@ -2742,19 +2994,13 @@ function hadle_items () {
         . 7 7 7 7 7 7 7 7 7 7 7 7 7 7 . 
         . . . . . . . . . . . . . . . . 
         `, "cloak", 6)
-    blockSettings.writeNumberArray("the invantory", [
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6
-    ])
-    blockSettings.writeNumber("theAbutton", -1)
-    blockSettings.writeNumber("thecloakslot", 6)
-    blockSettings.writeNumber("theBbutton", -1)
-    blockSettings.writeNumber("talismanslot", -1)
+    if (!(blockSettings.exists("the invantory"))) {
+        blockSettings.writeNumberArray("the invantory", [0])
+        blockSettings.writeNumber("theAbutton", -1)
+        blockSettings.writeNumber("thecloakslot", 6)
+        blockSettings.writeNumber("theBbutton", -1)
+        blockSettings.writeNumber("talismanslot", -1)
+    }
     theAbutton = blockSettings.readNumber("theAbutton")
     armer_slot = blockSettings.readNumber("thecloakslot")
     theBbuttonitem = blockSettings.readNumber("theBbutton")
@@ -2860,7 +3106,22 @@ function main_menu () {
         `, SpriteKind.acam)
     scene.cameraFollowSprite(cam)
     tiles.placeOnTile(cam, tiles.getTileLocation(7, 3))
-    myTextSprite = fancyText.create("abc")
+    main_menu_text = fancyText.create("Frost-Haven", 0, 2)
+    fancyText.setFont(main_menu_text, fancyText.rounded_large)
+    tiles.placeOnTile(main_menu_text, tiles.getTileLocation(7, 1))
+    sprites.setDataSprite(main_menu_text, "1", fancyText.create("play", 0, 3))
+    fancyText.setFont(sprites.readDataSprite(main_menu_text, "1"), fancyText.rounded_small)
+    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "1"), tiles.getTileLocation(7, 3))
+    sprites.setDataSprite(main_menu_text, "2", fancyText.create("controls", 0, 4))
+    fancyText.setFont(sprites.readDataSprite(main_menu_text, "2"), fancyText.rounded_small)
+    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "2"), tiles.getTileLocation(7, 4))
+    sprites.setDataSprite(main_menu_text, "3", fancyText.create("credits", 0, 4))
+    fancyText.setFont(sprites.readDataSprite(main_menu_text, "3"), fancyText.rounded_small)
+    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "3"), tiles.getTileLocation(7, 5))
+    sprites.setDataSprite(main_menu_text, "4", fancyText.create("reset data", 0, 4))
+    fancyText.setFont(sprites.readDataSprite(main_menu_text, "4"), fancyText.rounded_small)
+    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "4"), tiles.getTileLocation(7, 6))
+    sprites.setDataNumber(main_menu_text, "menu_item_picked", 1)
 }
 function update_this_lists () {
     theinvantorylist = []
@@ -2913,11 +3174,6 @@ browserEvents.E.onEvent(browserEvents.KeyEvent.Pressed, function () {
         for (let value of sprites.allOfKind(SpriteKind.item_slot)) {
             value.setFlag(SpriteFlag.Invisible, menu_open)
         }
-    }
-})
-controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (!(menu_open)) {
-        move_selector(4, "down")
     }
 })
 function create_invatnotory_slots (num: number) {
@@ -3210,8 +3466,6 @@ function create_invantory () {
     sprites.setDataString(sprites.readDataSprite(invantory, "talismanslot"), "item_type", "blank")
     sprites.setDataNumber(sprites.readDataSprite(invantory, "talismanslot"), "item_id", -1)
 }
-let myTextSprite: fancyText.TextSprite = null
-let mainstartmenu = false
 let path: TilemapPath.TilemapPath = null
 let items_names: string[] = []
 let selected_item = 0
@@ -3219,6 +3473,7 @@ let selceontype = ""
 let playersleep = 0
 let partical: Sprite = null
 let duraction_facing_left_or_right = 0
+let check_point: Sprite = null
 let mySprite5: Sprite = null
 let mySprite4: Sprite = null
 let mySprite3: Sprite = null
@@ -3232,6 +3487,8 @@ let playerlife = 0
 let mySprite: Sprite = null
 let NPCtext: fancyText.TextSprite = null
 let incutesence = false
+let main_menu_text: fancyText.TextSprite = null
+let mainstartmenu = false
 let thetalismanslotvar = 0
 let theBbuttonitem = 0
 let armer_slot = 0
@@ -3338,10 +3595,8 @@ let map_layouts = [img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
     `]
-if (false) {
-    timer.background(function () {
-        START_CUTSENSE()
-    })
+if (true) {
+    main_menu()
 } else {
     cam = sprites.create(img`
         . . . . . . . . . . . . . . . . 
@@ -3365,17 +3620,6 @@ if (false) {
     create_ui()
     canrun = true
 }
-game.onUpdate(function () {
-    if (camFallowPlayer) {
-        cam.x = mySprite.x
-        cam.y = mySprite.y
-    }
-})
-forever(function () {
-    extraEffects.createSpreadEffectOnAnchor(cam, myEffect, 5000, 200, 20)
-    extraEffects.createSpreadEffectOnAnchor(cam, myEffect, 5000, 150, 20)
-    pause(2000)
-})
 forever(function () {
     if (browserEvents.ArrowRight.isPressed()) {
         duraction_facing_left_or_right = 1
@@ -3854,7 +4098,59 @@ forever(function () {
         }
     }
 })
+game.onUpdate(function () {
+    if (camFallowPlayer) {
+        cam.x = mySprite.x
+        cam.y = mySprite.y
+    }
+})
 forever(function () {
+    extraEffects.createSpreadEffectOnAnchor(cam, myEffect, 5000, 200, 20)
+    extraEffects.createSpreadEffectOnAnchor(cam, myEffect, 5000, 150, 20)
+    pause(2000)
+})
+forever(function () {
+    for (let value of sprites.allOfKind(SpriteKind.savepoint)) {
+        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile46`)) {
+            blockSettings.writeNumber("checkpoint_zone_in_data", zone)
+            value.sayText("saving")
+            animation.runImageAnimation(
+            value,
+            [img`
+                . . . . . . . 8 8 . . . . . . . 
+                . . . . . . 8 4 4 8 . . . . . . 
+                . . . . . 8 4 5 5 4 8 . . . . . 
+                . . . . 8 4 5 4 4 5 4 8 . . . . 
+                . . . 8 4 5 4 4 4 4 5 4 8 . . . 
+                . . . 8 4 5 4 4 4 4 5 4 8 . . . 
+                . . . . 8 4 5 4 4 5 4 8 . . . . 
+                . . . . . 8 4 5 5 4 8 . . . . . 
+                . . . . . . 8 4 4 8 . . . . . . 
+                . . . . . . . 8 8 . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                `],
+            100,
+            false
+            )
+        } else {
+            value.sayText("")
+        }
+        if (blockSettings.exists("checkpoint_zone_in_data")) {
+            mySprite.sayText(blockSettings.readNumber("checkpoint_zone_in_data") == zone)
+            if (blockSettings.readNumber("checkpoint_zone_in_data") == zone) {
+            	
+            } else {
+            	
+            }
+        } else {
+        	
+        }
+    }
     if (!(spriteutils.isDestroyed(thelifesprtie))) {
         thelifesprtie.setImage(img`
             ................................................................

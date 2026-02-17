@@ -9,6 +9,29 @@ namespace SpriteKind {
     export const savepoint = SpriteKind.create()
     export const playerAttackHitboxType = SpriteKind.create()
 }
+function summon_enemy (tile_repaced: Image, ememy_type: string) {
+    if (ememy_type == "bug_1") {
+        enemysprite = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . 3 . . . 
+            . . . 7 . . 7 . . 7 3 . 3 4 3 . 
+            . . . 7 7 . 7 7 . 7 4 3 4 4 3 . 
+            . . . 7 7 7 7 7 7 7 4 4 4 4 3 . 
+            . 3 3 3 7 7 7 7 7 7 4 4 4 3 . . 
+            3 4 4 4 7 4 7 7 7 7 7 4 3 7 7 7 
+            . 3 4 4 7 4 7 4 7 7 7 4 7 7 7 . 
+            . . 3 7 7 4 7 4 7 7 7 7 7 7 3 3 
+            . 7 7 7 7 7 7 7 7 7 7 7 7 7 4 3 
+            . . 7 7 7 7 7 7 7 7 7 7 7 4 3 . 
+            `, SpriteKind.Enemy)
+        sprites.setDataNumber(enemysprite, "movement_type", 1)
+    }
+}
 browserEvents.X.onEvent(browserEvents.KeyEvent.Pressed, function () {
     if (!(inattack)) {
         if (!(indash)) {
@@ -1939,6 +1962,7 @@ function createlevel (num: number) {
         }
     } else if (num == 1) {
         tiles.setCurrentTilemap(tilemap`level4`)
+        summon_enemy(assets.tile`myTile5`, "bug_1")
         for (let value of tiles.getTilesByType(assets.tile`myTile42`)) {
             mySprite4 = sprites.create(img`
                 ................................................................
@@ -6383,6 +6407,7 @@ let dashes = 0
 let mySprite: Sprite = null
 let indash = false
 let inattack = false
+let enemysprite: Sprite = null
 let canrun = false
 let cam: Sprite = null
 let menu_open = false

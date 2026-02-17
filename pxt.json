@@ -16,7 +16,8 @@
         "RED LINE 6 by Luke (font)": "pub:05985-63882-95475-60702",
         "Stats": "github:UnsignedArduino/Stats#758e35856bd5565e5d0e25c95cccfac79b7fc168",
         "arcade-sprite-util": "github:jwunderl/arcade-sprite-util#v0.5.0",
-        "browser-events": "*"
+        "browser-events": "*",
+        "arcade-character-animations": "github:microsoft/arcade-character-animations#v0.1.0"
     },
     "files": [
         "main.blocks",

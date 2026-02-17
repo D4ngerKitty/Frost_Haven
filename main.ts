@@ -11,7 +11,7 @@ namespace SpriteKind {
 }
 function summon_enemy (tile_repaced: Image, ememy_type: string) {
     if (ememy_type == "bug_1") {
-        enemysprite = sprites.create(img`
+        for (let value of tiles.getTilesByType(img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
@@ -28,8 +28,79 @@ function summon_enemy (tile_repaced: Image, ememy_type: string) {
             . . 3 7 7 4 7 4 7 7 7 7 7 7 3 3 
             . 7 7 7 7 7 7 7 7 7 7 7 7 7 4 3 
             . . 7 7 7 7 7 7 7 7 7 7 7 4 3 . 
-            `, SpriteKind.Enemy)
-        sprites.setDataNumber(enemysprite, "movement_type", 1)
+            `)) {
+            enemysprite = sprites.create(img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . 3 . . . 
+                . . . 7 . . 7 . . 7 3 . 3 4 3 . 
+                . . . 7 7 . 7 7 . 7 4 3 4 4 3 . 
+                . . . 7 7 7 7 7 7 7 4 4 4 4 3 . 
+                . 3 3 3 7 7 7 7 7 7 4 4 4 3 . . 
+                3 4 4 4 7 4 7 7 7 7 7 4 3 7 7 7 
+                . 3 4 4 7 4 7 4 7 7 7 4 7 7 7 . 
+                . . 3 7 7 4 7 4 7 7 7 7 7 7 3 3 
+                . 7 7 7 7 7 7 7 7 7 7 7 7 7 4 3 
+                . . 7 7 7 7 7 7 7 7 7 7 7 4 3 . 
+                `, SpriteKind.Enemy)
+            characterAnimations.loopFrames(
+            enemysprite,
+            [img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . 3 . . . 
+                . . . 7 . . 7 . . 7 3 . 3 4 3 . 
+                . . . 7 7 . 7 7 . 7 4 3 4 4 3 . 
+                . . . 7 7 7 7 7 7 7 4 4 4 4 3 . 
+                . 3 3 3 7 7 7 7 7 7 4 4 4 3 . . 
+                3 4 4 4 7 4 7 7 7 7 7 4 3 7 7 7 
+                . 3 4 4 7 4 7 4 7 7 7 4 7 7 7 . 
+                . . 3 7 7 4 7 4 7 7 7 7 7 7 3 3 
+                . 7 7 7 7 7 7 7 7 7 7 7 7 7 4 3 
+                . . 7 7 7 7 7 7 7 7 7 7 7 4 3 . 
+                `],
+            500,
+            characterAnimations.rule(Predicate.FacingLeft)
+            )
+            characterAnimations.loopFrames(
+            enemysprite,
+            [img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . 3 . . . . . . . . . . . . 
+                . 3 4 3 . 3 7 . . 7 . . 7 . . . 
+                . 3 4 4 3 4 7 . 7 7 . 7 7 . . . 
+                . 3 4 4 4 4 7 7 7 7 7 7 7 . . . 
+                . . 3 4 4 4 7 7 7 7 7 7 3 3 3 . 
+                7 7 7 3 4 7 7 7 7 7 4 7 4 4 4 3 
+                . 7 7 7 4 7 7 7 4 7 4 7 4 4 3 . 
+                3 3 7 7 7 7 7 7 4 7 4 7 7 3 . . 
+                3 4 7 7 7 7 7 7 7 7 7 7 7 7 7 . 
+                . 3 4 7 7 7 7 7 7 7 7 7 7 7 . . 
+                `],
+            500,
+            characterAnimations.rule(Predicate.FacingRight)
+            )
+            sprites.setDataNumber(enemysprite, "movement_type", 1)
+            sprites.setDataNumber(enemysprite, "HP", 3)
+            sprites.setDataNumber(enemysprite, "damgedealt", -1)
+            sprites.setDataNumber(enemysprite, "Xmovement", -50)
+            enemysprite.ay = 150
+            tiles.placeOnTile(enemysprite, value)
+            tiles.setTileAt(value, assets.tile`myTile5`)
+        }
     }
 }
 browserEvents.X.onEvent(browserEvents.KeyEvent.Pressed, function () {
@@ -2490,7 +2561,63 @@ function dash (howfar: number, durection: number) {
     platformer.setGravity(0)
     for (let index = 0; index < 16 * howfar; index++) {
         mySprite.x += duraction_facing_left_or_right
-        partical = sprites.create(mySprite.image.clone(), SpriteKind.typepartical)
+        partical = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.typepartical)
+        if (duraction_facing_left_or_right == -1) {
+            partical.setImage(img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . 2 . 2 . . 
+                . 2 . 2 . . 3 3 3 . . 2 2 2 . . 
+                . 2 2 2 . 3 3 3 3 3 2 2 . . . . 
+                . . . 2 2 1 3 1 3 3 . . . . . . 
+                . . . . . 3 3 2 3 3 . . . . . . 
+                . . . . . . 3 3 3 . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . 5 5 5 5 . . . . . . 
+                . . . . . 5 5 6 5 5 5 . . . . . 
+                . . . . . 5 5 6 5 5 5 . . . . . 
+                . . . . . 5 6 6 6 5 5 . . . . . 
+                . . . . . 6 6 4 4 6 6 . . . . . 
+                . . . . . . 4 . 4 4 . . . . . . 
+                . . . . . . 4 . . 4 . . . . . . 
+                . . . . . . 4 . . 4 . . . . . . 
+                `.clone())
+        } else {
+            partical.setImage(img`
+                . . . . . . . . . . . . . . . . 
+                . . 2 . 2 . . . . . . . . . . . 
+                . . 2 2 2 . . 3 3 3 . . 2 . 2 . 
+                . . . . 2 2 3 3 3 3 3 . 2 2 2 . 
+                . . . . . . 3 3 1 3 1 2 2 . . . 
+                . . . . . . 3 3 2 3 3 . . . . . 
+                . . . . . . . 3 3 3 . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . 5 5 5 5 . . . . . . 
+                . . . . . 5 5 5 6 5 5 . . . . . 
+                . . . . . 5 5 5 6 5 5 . . . . . 
+                . . . . . 5 5 6 6 6 5 . . . . . 
+                . . . . . 6 6 4 4 6 6 . . . . . 
+                . . . . . . 4 4 . 4 . . . . . . 
+                . . . . . . 4 . . 4 . . . . . . 
+                . . . . . . 4 . . 4 . . . . . . 
+                `.clone())
+        }
         if (Math.percentChance(50)) {
             partical.image.replace(6, 3)
             partical.image.replace(5, 3)
@@ -7211,6 +7338,7 @@ forever(function () {
         }
     }
 })
+// the player ui and saving
 forever(function () {
     for (let value of sprites.allOfKind(SpriteKind.savepoint)) {
         if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile46`)) {

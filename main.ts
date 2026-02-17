@@ -5973,7 +5973,7 @@ function moveBeteewnleveles () {
     if (zone == 1) {
         if (mySprite.tilemapLocation().column == 0 && mySprite.isHittingTile(CollisionDirection.Left)) {
             createlevel(0)
-            tiles.placeOnTile(mySprite, tiles.getTileLocation(84, 37))
+            tiles.placeOnTile(mySprite, tiles.getTileLocation(84, 16))
         }
     }
 }

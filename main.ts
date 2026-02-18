@@ -358,6 +358,107 @@ function create_ui () {
 controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
     pull_up_invantory()
 })
+browserEvents.C.onEvent(browserEvents.KeyEvent.Pressed, function () {
+    if (!(lockcontrols && (incutesence && mainstartmenu))) {
+        if (!(inattack)) {
+            platformer.moveSprite(mySprite, false, 90)
+            inattack = true
+            if (theAbutton == 0) {
+                if (duraction_facing_left_or_right == 1) {
+                    sprites.setDataNumber(attack_hitbox, "damge", -1)
+                    if (sword_compo >= 1) {
+                        sword_compo = 0
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        melleattackslist[1],
+                        50,
+                        false
+                        )
+                    } else {
+                        sword_compo = 1
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        melleattackslist[0],
+                        50,
+                        false
+                        )
+                    }
+                } else {
+                    if (sword_compo >= 1) {
+                        sword_compo = 0
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        attacksflipped[1],
+                        50,
+                        false
+                        )
+                    } else {
+                        sword_compo = 1
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        attacksflipped[0],
+                        50,
+                        false
+                        )
+                    }
+                }
+                timer.background(function () {
+                    for (let index = 0; index < attacksflipped[0].length - 3; index++) {
+                        pause(50)
+                    }
+                    inattack = false
+                    platformer.moveSprite(mySprite, true, 90)
+                })
+            } else if (theAbutton == 1) {
+                sprites.setDataNumber(attack_hitbox, "damge", -1.5)
+                if (duraction_facing_left_or_right == 1) {
+                    if (sword_compo >= 1) {
+                        sword_compo = 0
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        melleattackslist[2],
+                        50,
+                        false
+                        )
+                    } else {
+                        sword_compo = 1
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        melleattackslist[3],
+                        50,
+                        false
+                        )
+                    }
+                } else {
+                    if (sword_compo >= 1) {
+                        sword_compo = 0
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        attacksflipped[2],
+                        50,
+                        false
+                        )
+                    } else {
+                        sword_compo = 1
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        attacksflipped[3],
+                        50,
+                        false
+                        )
+                    }
+                }
+                timer.background(function () {
+                    for (let index = 0; index < attacksflipped[2].length - 2; index++) {
+                        pause(50)
+                    }
+                    inattack = false
+                    platformer.moveSprite(mySprite, true, 90)
+                })
+            }
+        }
+    }
+})
 function createlevel (num: number) {
     sprites.destroyAllSpritesOfKind(SpriteKind.npc)
     sprites.destroyAllSpritesOfKind(SpriteKind.background)
@@ -2008,6 +2109,121 @@ function createlevel (num: number) {
             tiles.setTileAt(value, assets.tile`transparency16`)
             tiles.placeOnTile(mySprite4, value)
         }
+        for (let value of tiles.getTilesByType(assets.tile`myTile12`)) {
+            aNPC = sprites.create(img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                `, SpriteKind.npc)
+            animation.runImageAnimation(
+            aNPC,
+            [img`
+                . . . . . . . . . . . . . . . . 
+                . 7 . . . . 6 6 . . . . . . . . 
+                7 7 7 . 6 6 6 6 6 . . . . . . . 
+                7 7 7 . 6 6 5 5 5 . . . . . . . 
+                . 7 . . . 3 5 3 4 . . . . . . . 
+                . 7 . . . 4 4 4 4 . . . . . . . 
+                . 7 . . . 4 4 4 . . . . . . . . 
+                . 7 . . . . . . . . . . . . . . 
+                . 7 . . . . 4 4 4 4 . . . . . . 
+                . 5 5 5 4 4 4 5 4 4 4 . . . . . 
+                . 7 . . . . 4 4 5 4 5 . . . . . 
+                . 7 . . . . 4 5 4 4 5 . . . . . 
+                . 7 . . . . 4 4 4 5 5 . . . . . 
+                . 7 . . . . 5 5 5 5 . . . . . . 
+                . 7 . . . . 5 . . 5 . . . . . . 
+                . 7 . . . . 5 . . 5 . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . 2 . 2 . . . . . . . . . . . 
+                . . 2 2 2 . . 3 3 3 . . 2 . 2 . 
+                . . . . 2 2 3 3 3 3 3 . 2 2 2 . 
+                . . . . . . 3 3 1 3 1 2 2 . . . 
+                . . . . . . 3 3 2 3 3 . . . . . 
+                . . . . . . . 3 3 3 . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . 5 5 5 5 . . . . . . 
+                . . . . . 5 5 5 6 5 5 . . . . . 
+                . . . . . 5 5 5 6 5 5 . . . . . 
+                . . . . . 5 5 6 6 6 5 . . . . . 
+                . . . . . 6 6 4 4 6 6 . . . . . 
+                . . . . . . 4 4 . 4 . . . . . . 
+                . . . . . . 4 . . 4 . . . . . . 
+                . . . . . . 4 . . 4 . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . 2 . 2 . . . . . . . . . . . 
+                . . 2 2 2 . . 3 3 3 . . 2 . 2 . 
+                . . . . 2 2 3 3 3 3 3 . 2 2 2 . 
+                . . . . . . 3 3 1 3 1 2 2 . . . 
+                . . . . . . 3 3 2 3 3 . . . . . 
+                . . . . . . . 3 3 3 . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . 5 5 5 5 . . . . . . 
+                . . . . . 5 5 5 6 5 5 . . . . . 
+                . . . . . 5 5 5 6 5 5 . . . . . 
+                . . . . . 5 5 6 6 6 5 . . . . . 
+                . . . . . 6 6 4 4 6 6 . . . . . 
+                . . . . . . 4 4 . 4 . . . . . . 
+                . . . . . . 4 . . 4 . . . . . . 
+                . . . . . . 4 . . 4 . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . 2 . 2 . . . . . . . . . . . 
+                . . 2 2 2 . . 3 3 3 . . 2 . 2 . 
+                . . . . 2 2 3 3 3 3 3 . 2 2 2 . 
+                . . . . . . 3 3 3 3 3 2 2 . . . 
+                . . . . . . 3 3 2 3 3 . . . . . 
+                . . . . . . . 3 3 3 . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . 5 5 5 5 . . . . . . 
+                . . . . . 5 5 5 6 5 5 . . . . . 
+                . . . . . 5 5 5 6 5 5 . . . . . 
+                . . . . . 5 5 6 6 6 5 . . . . . 
+                . . . . . 6 6 4 . 6 6 . . . . . 
+                . . . . . . 4 . . 4 . . . . . . 
+                . . . . . . 4 . . 4 . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . 2 . 2 . . 3 3 3 . . . . . . 
+                . . 2 2 2 . 3 3 3 3 3 . 2 . 2 . 
+                . . . . 2 2 3 3 3 3 3 . 2 2 2 . 
+                . . . . . . 3 3 2 3 3 2 2 . . . 
+                . . . . . . . 3 3 3 . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . 5 5 5 5 . . . . . . 
+                . . . . . 5 5 5 6 5 5 . . . . . 
+                . . . . . 5 5 5 6 5 5 . . . . . 
+                . . . . . 5 5 6 6 6 5 . . . . . 
+                . . . . . 6 6 4 4 6 6 . . . . . 
+                . . . . . . 4 4 . 4 . . . . . . 
+                . . . . . . 4 . . 4 . . . . . . 
+                . . . . . . 4 . . 4 . . . . . . 
+                `],
+            100,
+            true
+            )
+            tiles.setTileAt(value, assets.tile`transparency16`)
+            tiles.placeOnTile(aNPC, value)
+        }
+    }
+    if (false) {
         for (let value of tiles.getTilesByType(assets.tile`myTile16`)) {
             mySprite4 = sprites.create(img`
                 ................................................................
@@ -2556,22 +2772,6 @@ browserEvents.ArrowDown.onEvent(browserEvents.KeyEvent.Pressed, function () {
             fancyText.setColor(sprites.readDataSprite(main_menu_text, "" + sprites.readDataNumber(main_menu_text, "menu_item_picked")), 3)
             music.play(music.createSoundEffect(WaveShape.Square, 1110, 0, 142, 0, 100, SoundExpressionEffect.Vibrato, InterpolationCurve.Logarithmic), music.PlaybackMode.InBackground)
         }
-    }
-})
-events.spriteEvent(SpriteKind.Enemy, SpriteKind.playerAttackHitboxType, events.SpriteEvent.StartOverlapping, function (sprite, otherSprite) {
-    sprites.changeDataNumberBy(sprite, "HP", sprites.readDataNumber(otherSprite, "damge"))
-    if (sprites.readDataNumber(sprite, "HP") > 0) {
-        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(4, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
-        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(5, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
-        if (sprites.readDataNumber(sprite, "movement_type") == 1) {
-            sprite.vx = 0
-            pause(100)
-            sprite.vx = sprites.readDataNumber(sprite, "Xmovement")
-        }
-    } else {
-        sprites.destroy(sprite)
-        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(4, ExtraEffectPresetShape.Explosion), sprite.x, sprite.y, 50, 16, 7)
-        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(5, ExtraEffectPresetShape.Explosion), sprite.x, sprite.y, 50, 16, 7)
     }
 })
 function createplayer () {
@@ -5887,12 +6087,10 @@ function hadle_items () {
         blockSettings.writeNumberArray("the invantory", [
         0,
         1,
-        2,
-        3,
-        4,
         5,
         7,
-        8
+        8,
+        4
         ])
         blockSettings.writeNumber("theAbutton", -1)
         blockSettings.writeNumber("thecloakslot", 6)
@@ -5983,107 +6181,6 @@ function START_CUTSENSE () {
     create_ui()
     canrun = true
 }
-browserEvents.C.onEvent(browserEvents.KeyEvent.Pressed, function () {
-    if (!(lockcontrols && (incutesence && mainstartmenu))) {
-        if (!(inattack)) {
-            platformer.moveSprite(mySprite, false, 90)
-            inattack = true
-            if (theAbutton == 0) {
-                if (duraction_facing_left_or_right == 1) {
-                    sprites.setDataNumber(attack_hitbox, "damge", -1)
-                    if (sword_compo >= 1) {
-                        sword_compo = 0
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        melleattackslist[1],
-                        50,
-                        false
-                        )
-                    } else {
-                        sword_compo = 1
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        melleattackslist[0],
-                        50,
-                        false
-                        )
-                    }
-                } else {
-                    if (sword_compo >= 1) {
-                        sword_compo = 0
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        attacksflipped[1],
-                        50,
-                        false
-                        )
-                    } else {
-                        sword_compo = 1
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        attacksflipped[0],
-                        50,
-                        false
-                        )
-                    }
-                }
-                timer.background(function () {
-                    for (let index = 0; index < attacksflipped[0].length - 3; index++) {
-                        pause(50)
-                    }
-                    inattack = false
-                    platformer.moveSprite(mySprite, true, 90)
-                })
-            } else if (theAbutton == 1) {
-                sprites.setDataNumber(attack_hitbox, "damge", -1.5)
-                if (duraction_facing_left_or_right == 1) {
-                    if (sword_compo >= 1) {
-                        sword_compo = 0
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        melleattackslist[2],
-                        50,
-                        false
-                        )
-                    } else {
-                        sword_compo = 1
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        melleattackslist[3],
-                        50,
-                        false
-                        )
-                    }
-                } else {
-                    if (sword_compo >= 1) {
-                        sword_compo = 0
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        attacksflipped[2],
-                        50,
-                        false
-                        )
-                    } else {
-                        sword_compo = 1
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        attacksflipped[3],
-                        50,
-                        false
-                        )
-                    }
-                }
-                timer.background(function () {
-                    for (let index = 0; index < attacksflipped[2].length - 2; index++) {
-                        pause(50)
-                    }
-                    inattack = false
-                    platformer.moveSprite(mySprite, true, 90)
-                })
-            }
-        }
-    }
-})
 function main_menu () {
     mainstartmenu = true
     cam = sprites.create(img`
@@ -6254,6 +6351,22 @@ function create_invatnotory_slots (num: number) {
         sprites.readDataSprite(invantory, "" + index).z = 100
     }
 }
+events.spriteEvent(SpriteKind.Enemy, SpriteKind.playerAttackHitboxType, events.SpriteEvent.StartOverlapping, function (sprite, otherSprite) {
+    sprites.changeDataNumberBy(sprite, "HP", sprites.readDataNumber(otherSprite, "damge"))
+    if (sprites.readDataNumber(sprite, "HP") > 0) {
+        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(4, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
+        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(5, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
+        if (sprites.readDataNumber(sprite, "movement_type") == 1) {
+            sprite.vx = 0
+            pause(100)
+            sprite.vx = sprites.readDataNumber(sprite, "Xmovement")
+        }
+    } else {
+        sprites.destroy(sprite)
+        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(4, ExtraEffectPresetShape.Explosion), sprite.x, sprite.y, 50, 16, 7)
+        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(5, ExtraEffectPresetShape.Explosion), sprite.x, sprite.y, 50, 16, 7)
+    }
+})
 function create_invantory () {
     invantory = sprites.create(img`
         ................................................................................................................................................................
@@ -6519,21 +6632,22 @@ function create_invantory () {
 }
 let path: TilemapPath.TilemapPath = null
 let items_names: string[] = []
-let sword_compo = 0
-let attacksflipped: Image[][] = []
-let melleattackslist: Image[][] = []
 let selected_item = 0
 let selceontype = ""
-let attack_hitbox: Sprite = null
 let playersleep = 0
 let partical: Sprite = null
-let duraction_facing_left_or_right = 0
 let check_point: Sprite = null
 let mySprite5: Sprite = null
+let aNPC: Sprite = null
 let mySprite4: Sprite = null
 let mySprite3: Sprite = null
 let mySprite2: Sprite = null
 let zone = 0
+let attacksflipped: Image[][] = []
+let melleattackslist: Image[][] = []
+let sword_compo = 0
+let attack_hitbox: Sprite = null
+let duraction_facing_left_or_right = 0
 let maxPLayerLife = 0
 let playerlife = 0
 let NPCtext: fancyText.TextSprite = null

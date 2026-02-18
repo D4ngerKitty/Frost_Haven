@@ -56,7 +56,7 @@ function summon_enemy (tile_repaced: Image, ememy_type: string) {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . 3 . . . 
+                . . . . . . . . . . . . . 3 3 . 
                 . . . 7 . . 7 . . 7 3 . 3 4 3 . 
                 . . . 7 7 . 7 7 . 7 4 3 4 4 3 . 
                 . . . 7 7 7 7 7 7 7 4 4 4 4 3 . 
@@ -79,7 +79,7 @@ function summon_enemy (tile_repaced: Image, ememy_type: string) {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
-                . . . 3 . . . . . . . . . . . . 
+                . 3 3 . . . . . . . . . . . . . 
                 . 3 4 3 . 3 7 . . 7 . . 7 . . . 
                 . 3 4 4 3 4 7 . 7 7 . 7 7 . . . 
                 . 3 4 4 4 4 7 7 7 7 7 7 7 . . . 
@@ -94,9 +94,11 @@ function summon_enemy (tile_repaced: Image, ememy_type: string) {
             characterAnimations.rule(Predicate.FacingRight)
             )
             sprites.setDataNumber(enemysprite, "movement_type", 1)
-            sprites.setDataNumber(enemysprite, "HP", 3)
+            sprites.setDataNumber(enemysprite, "HP", 6)
             sprites.setDataNumber(enemysprite, "damgedealt", -1)
-            sprites.setDataNumber(enemysprite, "Xmovement", -50)
+            sprites.setDataNumber(enemysprite, "Xmovement", 50)
+            sprites.setDataNumber(enemysprite, "speed", 50)
+            enemysprite.vx = sprites.readDataNumber(enemysprite, "speed")
             enemysprite.ay = 150
             tiles.placeOnTile(enemysprite, value)
             tiles.setTileAt(value, assets.tile`myTile5`)
@@ -355,105 +357,6 @@ function create_ui () {
 }
 controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
     pull_up_invantory()
-})
-browserEvents.C.onEvent(browserEvents.KeyEvent.Pressed, function () {
-    if (!(lockcontrols && (incutesence && mainstartmenu))) {
-        if (!(inattack)) {
-            platformer.moveSprite(mySprite, false, 90)
-            inattack = true
-            if (theAbutton == 0) {
-                if (duraction_facing_left_or_right == 1) {
-                    if (sword_compo >= 1) {
-                        sword_compo = 0
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        melleattackslist[1],
-                        50,
-                        false
-                        )
-                    } else {
-                        sword_compo = 1
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        melleattackslist[0],
-                        50,
-                        false
-                        )
-                    }
-                } else {
-                    if (sword_compo >= 1) {
-                        sword_compo = 0
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        attacksflipped[1],
-                        50,
-                        false
-                        )
-                    } else {
-                        sword_compo = 1
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        attacksflipped[0],
-                        50,
-                        false
-                        )
-                    }
-                }
-                timer.background(function () {
-                    for (let index = 0; index < attacksflipped[0].length - 3; index++) {
-                        pause(50)
-                    }
-                    inattack = false
-                    platformer.moveSprite(mySprite, true, 90)
-                })
-            } else if (theAbutton == 1) {
-                if (duraction_facing_left_or_right == 1) {
-                    if (sword_compo >= 1) {
-                        sword_compo = 0
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        melleattackslist[2],
-                        50,
-                        false
-                        )
-                    } else {
-                        sword_compo = 1
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        melleattackslist[3],
-                        50,
-                        false
-                        )
-                    }
-                } else {
-                    if (sword_compo >= 1) {
-                        sword_compo = 0
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        attacksflipped[2],
-                        50,
-                        false
-                        )
-                    } else {
-                        sword_compo = 1
-                        animation.runImageAnimation(
-                        attack_hitbox,
-                        attacksflipped[3],
-                        50,
-                        false
-                        )
-                    }
-                }
-                timer.background(function () {
-                    for (let index = 0; index < attacksflipped[2].length - 2; index++) {
-                        pause(50)
-                    }
-                    inattack = false
-                    platformer.moveSprite(mySprite, true, 90)
-                })
-            }
-        }
-    }
 })
 function createlevel (num: number) {
     sprites.destroyAllSpritesOfKind(SpriteKind.npc)
@@ -2655,6 +2558,22 @@ browserEvents.ArrowDown.onEvent(browserEvents.KeyEvent.Pressed, function () {
         }
     }
 })
+events.spriteEvent(SpriteKind.Enemy, SpriteKind.playerAttackHitboxType, events.SpriteEvent.StartOverlapping, function (sprite, otherSprite) {
+    sprites.changeDataNumberBy(sprite, "HP", sprites.readDataNumber(otherSprite, "damge"))
+    if (sprites.readDataNumber(sprite, "HP") > 0) {
+        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(4, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
+        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(5, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
+        if (sprites.readDataNumber(sprite, "movement_type") == 1) {
+            sprite.vx = 0
+            pause(100)
+            sprite.vx = sprites.readDataNumber(sprite, "Xmovement")
+        }
+    } else {
+        sprites.destroy(sprite)
+        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(4, ExtraEffectPresetShape.Explosion), sprite.x, sprite.y, 50, 16, 7)
+        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(5, ExtraEffectPresetShape.Explosion), sprite.x, sprite.y, 50, 16, 7)
+    }
+})
 function createplayer () {
     mySprite = platformer.create(img`
         . . . . . . . . . . . . . . . . 
@@ -3037,20 +2956,20 @@ function createplayer () {
         ..................................................
         ..................................................
         ..................................................
-        ......................111111......................
-        ......................1....1......................
-        ......................1....1......................
-        ......................1....1......................
-        ......................1....1......................
-        ......................1....1......................
-        ......................1....1......................
-        ......................1....1......................
-        ......................1....1......................
-        ......................1....1......................
-        ......................1....1......................
-        ......................1....1......................
-        ......................1....1......................
-        ......................111111......................
+        ..................................................
+        ..................................................
+        ..................................................
+        ..................................................
+        ..................................................
+        ..................................................
+        ..................................................
+        ..................................................
+        ..................................................
+        ..................................................
+        ..................................................
+        ..................................................
+        ..................................................
+        ..................................................
         ..................................................
         ..................................................
         ..................................................
@@ -6064,6 +5983,107 @@ function START_CUTSENSE () {
     create_ui()
     canrun = true
 }
+browserEvents.C.onEvent(browserEvents.KeyEvent.Pressed, function () {
+    if (!(lockcontrols && (incutesence && mainstartmenu))) {
+        if (!(inattack)) {
+            platformer.moveSprite(mySprite, false, 90)
+            inattack = true
+            if (theAbutton == 0) {
+                if (duraction_facing_left_or_right == 1) {
+                    sprites.setDataNumber(attack_hitbox, "damge", -1)
+                    if (sword_compo >= 1) {
+                        sword_compo = 0
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        melleattackslist[1],
+                        50,
+                        false
+                        )
+                    } else {
+                        sword_compo = 1
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        melleattackslist[0],
+                        50,
+                        false
+                        )
+                    }
+                } else {
+                    if (sword_compo >= 1) {
+                        sword_compo = 0
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        attacksflipped[1],
+                        50,
+                        false
+                        )
+                    } else {
+                        sword_compo = 1
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        attacksflipped[0],
+                        50,
+                        false
+                        )
+                    }
+                }
+                timer.background(function () {
+                    for (let index = 0; index < attacksflipped[0].length - 3; index++) {
+                        pause(50)
+                    }
+                    inattack = false
+                    platformer.moveSprite(mySprite, true, 90)
+                })
+            } else if (theAbutton == 1) {
+                sprites.setDataNumber(attack_hitbox, "damge", -1.5)
+                if (duraction_facing_left_or_right == 1) {
+                    if (sword_compo >= 1) {
+                        sword_compo = 0
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        melleattackslist[2],
+                        50,
+                        false
+                        )
+                    } else {
+                        sword_compo = 1
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        melleattackslist[3],
+                        50,
+                        false
+                        )
+                    }
+                } else {
+                    if (sword_compo >= 1) {
+                        sword_compo = 0
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        attacksflipped[2],
+                        50,
+                        false
+                        )
+                    } else {
+                        sword_compo = 1
+                        animation.runImageAnimation(
+                        attack_hitbox,
+                        attacksflipped[3],
+                        50,
+                        false
+                        )
+                    }
+                }
+                timer.background(function () {
+                    for (let index = 0; index < attacksflipped[2].length - 2; index++) {
+                        pause(50)
+                    }
+                    inattack = false
+                    platformer.moveSprite(mySprite, true, 90)
+                })
+            }
+        }
+    }
+})
 function main_menu () {
     mainstartmenu = true
     cam = sprites.create(img`
@@ -6499,21 +6519,21 @@ function create_invantory () {
 }
 let path: TilemapPath.TilemapPath = null
 let items_names: string[] = []
+let sword_compo = 0
+let attacksflipped: Image[][] = []
+let melleattackslist: Image[][] = []
 let selected_item = 0
 let selceontype = ""
+let attack_hitbox: Sprite = null
 let playersleep = 0
 let partical: Sprite = null
+let duraction_facing_left_or_right = 0
 let check_point: Sprite = null
 let mySprite5: Sprite = null
 let mySprite4: Sprite = null
 let mySprite3: Sprite = null
 let mySprite2: Sprite = null
 let zone = 0
-let attacksflipped: Image[][] = []
-let melleattackslist: Image[][] = []
-let attack_hitbox: Sprite = null
-let sword_compo = 0
-let duraction_facing_left_or_right = 0
 let maxPLayerLife = 0
 let playerlife = 0
 let NPCtext: fancyText.TextSprite = null
@@ -6819,6 +6839,57 @@ let map_layouts = [img`
     7 7 7 . . . 7 7 7 7 7 7 7 . . . . 
     7 7 7 . . . 7 7 7 7 7 7 . . . . . 
     8 8 8 . . . 8 8 8 8 8 8 . . . . . 
+    `, img`
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ......................111111......................
+    ......................1....1......................
+    ......................1....1......................
+    ......................1....1......................
+    ......................1....1......................
+    ......................1....1......................
+    ......................1....1......................
+    ......................1....1......................
+    ......................1....1......................
+    ......................1....1......................
+    ......................1....1......................
+    ......................1....1......................
+    ......................1....1......................
+    ......................111111......................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
+    ..................................................
     `]
 if (true) {
     main_menu()
@@ -8043,6 +8114,25 @@ game.onUpdate(function () {
     }
     attack_hitbox.x = mySprite.x
     attack_hitbox.y = mySprite.y
+})
+forever(function () {
+    for (let value of sprites.allOfKind(SpriteKind.Enemy)) {
+        if (sprites.readDataNumber(value, "movement_type") == 1) {
+            if (tiles.tileAtLocationIsWall(value.tilemapLocation().getNeighboringLocation(CollisionDirection.Left))) {
+                value.vx = sprites.readDataNumber(value, "speed")
+                sprites.setDataNumber(value, "Xmovement", sprites.readDataNumber(value, "speed"))
+            } else if (tiles.tileAtLocationIsWall(value.tilemapLocation().getNeighboringLocation(CollisionDirection.Right))) {
+                value.vx = 0 - sprites.readDataNumber(value, "speed")
+                sprites.setDataNumber(value, "Xmovement", 0 - sprites.readDataNumber(value, "speed"))
+            } else if (!(tiles.tileAtLocationIsWall(value.tilemapLocation().getNeighboringLocation(CollisionDirection.Bottom).getNeighboringLocation(CollisionDirection.Right)))) {
+                value.vx = 0 - sprites.readDataNumber(value, "speed")
+                sprites.setDataNumber(value, "Xmovement", 0 - sprites.readDataNumber(value, "speed"))
+            } else if (!(tiles.tileAtLocationIsWall(value.tilemapLocation().getNeighboringLocation(CollisionDirection.Bottom).getNeighboringLocation(CollisionDirection.Left)))) {
+                value.vx = sprites.readDataNumber(value, "speed")
+                sprites.setDataNumber(value, "Xmovement", sprites.readDataNumber(value, "speed"))
+            }
+        }
+    }
 })
 forever(function () {
     extraEffects.createSpreadEffectOnAnchor(cam, myEffect, 5000, 200, 20)

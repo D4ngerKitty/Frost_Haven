@@ -6204,9 +6204,12 @@ function main_menu () {
     sprites.setDataNumber(main_menu_text, "menu_item_picked", 1)
 }
 events.spriteEvent(SpriteKind.Player, SpriteKind.Enemy, events.SpriteEvent.StartOverlapping, function (sprite, otherSprite) {
-    playerlife = sprites.readDataNumber(otherSprite, "damgedealt")
+    extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(4, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
+    extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(5, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
+    playerlife += sprites.readDataNumber(otherSprite, "damgedealt")
+    scene.cameraShake(6, 100)
     if (playerlife <= 0) {
-        kill_player("you died to low level bug", "Get good")
+        kill_player("you died to bug", "Womp womp")
     }
 })
 function update_this_lists () {

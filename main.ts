@@ -382,8 +382,8 @@ browserEvents.C.onEvent(browserEvents.KeyEvent.Pressed, function () {
             platformer.moveSprite(mySprite, false, 90)
             inattack = true
             if (theAbutton == 0) {
+                sprites.setDataNumber(attack_hitbox, "damge", -1)
                 if (duraction_facing_left_or_right == 1) {
-                    sprites.setDataNumber(attack_hitbox, "damge", -1)
                     if (sword_compo >= 1) {
                         sword_compo = 0
                         animation.runImageAnimation(
@@ -2741,20 +2741,13 @@ browserEvents.ArrowDown.onEvent(browserEvents.KeyEvent.Pressed, function () {
         }
     }
 })
-events.spriteEvent(SpriteKind.Enemy, SpriteKind.playerAttackHitboxType, events.SpriteEvent.StartOverlapping, function (sprite, otherSprite) {
-    sprites.changeDataNumberBy(sprite, "HP", sprites.readDataNumber(otherSprite, "damge"))
-    if (sprites.readDataNumber(sprite, "HP") > 0) {
-        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(4, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
-        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(5, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
-        if (sprites.readDataNumber(sprite, "movement_type") == 1) {
-            sprite.vx = 0
-            pause(100)
-            sprite.vx = sprites.readDataNumber(sprite, "Xmovement")
-        }
-    } else {
-        sprites.destroy(sprite)
-        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(4, ExtraEffectPresetShape.Explosion), sprite.x, sprite.y, 50, 16, 7)
-        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(5, ExtraEffectPresetShape.Explosion), sprite.x, sprite.y, 50, 16, 7)
+events.spriteEvent(SpriteKind.Player, SpriteKind.Enemy, events.SpriteEvent.StartOverlapping, function (sprite, otherSprite) {
+    extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(4, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
+    extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(5, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
+    playerlife += sprites.readDataNumber(otherSprite, "damgedealt")
+    scene.cameraShake(6, 100)
+    if (playerlife <= 0) {
+        kill_player("you died to bug", "Womp womp")
     }
 })
 function createplayer () {
@@ -6203,15 +6196,6 @@ function main_menu () {
     tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "4"), tiles.getTileLocation(36, 6))
     sprites.setDataNumber(main_menu_text, "menu_item_picked", 1)
 }
-events.spriteEvent(SpriteKind.Player, SpriteKind.Enemy, events.SpriteEvent.StartOverlapping, function (sprite, otherSprite) {
-    extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(4, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
-    extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(5, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
-    playerlife += sprites.readDataNumber(otherSprite, "damgedealt")
-    scene.cameraShake(6, 100)
-    if (playerlife <= 0) {
-        kill_player("you died to bug", "Womp womp")
-    }
-})
 function update_this_lists () {
     theinvantorylist = []
     for (let index = 0; index <= 15; index++) {
@@ -6292,19 +6276,19 @@ browserEvents.Z.onEvent(browserEvents.KeyEvent.Pressed, function () {
                     fancyText.setColor(sprites.readDataSprite(main_menu_text, "4"), 0)
                     pause(200)
                     fancyText.setText(sprites.readDataSprite(main_menu_text, "1"), "game made by")
-                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "1"), tiles.getTileLocation(7, 3))
+                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "1"), tiles.getTileLocation(36, 3))
                     fancyText.setColor(sprites.readDataSprite(main_menu_text, "1"), 2)
                     pause(200)
                     fancyText.setText(sprites.readDataSprite(main_menu_text, "2"), "DangerKitty")
-                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "2"), tiles.getTileLocation(7, 4))
+                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "2"), tiles.getTileLocation(36, 4))
                     fancyText.setColor(sprites.readDataSprite(main_menu_text, "2"), 2)
                     pause(200)
                     fancyText.setText(sprites.readDataSprite(main_menu_text, "3"), "playtesters:")
-                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "3"), tiles.getTileLocation(7, 5))
+                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "3"), tiles.getTileLocation(36, 5))
                     fancyText.setColor(sprites.readDataSprite(main_menu_text, "3"), 2)
                     pause(200)
                     fancyText.setText(sprites.readDataSprite(main_menu_text, "4"), "luke, astro")
-                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "4"), tiles.getTileLocation(7, 6))
+                    tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "4"), tiles.getTileLocation(36, 6))
                     fancyText.setColor(sprites.readDataSprite(main_menu_text, "4"), 2)
                     pause(200)
                     while (!(browserEvents.Z.isPressed())) {
@@ -6375,6 +6359,22 @@ function create_invatnotory_slots (num: number) {
         sprites.readDataSprite(invantory, "" + index).z = 100
     }
 }
+events.spriteEvent(SpriteKind.Enemy, SpriteKind.playerAttackHitboxType, events.SpriteEvent.StartOverlapping, function (sprite, otherSprite) {
+    sprites.changeDataNumberBy(sprite, "HP", sprites.readDataNumber(otherSprite, "damge"))
+    if (sprites.readDataNumber(sprite, "HP") > 0) {
+        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(4, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
+        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(5, ExtraEffectPresetShape.Spark), sprite.x, sprite.y, 50, 16, 7)
+        if (sprites.readDataNumber(sprite, "movement_type") == 1) {
+            sprite.vx = 0
+            pause(100)
+            sprite.vx = sprites.readDataNumber(sprite, "Xmovement")
+        }
+    } else {
+        sprites.destroy(sprite)
+        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(4, ExtraEffectPresetShape.Explosion), sprite.x, sprite.y, 50, 16, 7)
+        extraEffects.createSpreadEffectAt(extraEffects.createSingleColorSpreadEffectData(5, ExtraEffectPresetShape.Explosion), sprite.x, sprite.y, 50, 16, 7)
+    }
+})
 function create_invantory () {
     invantory = sprites.create(img`
         ................................................................................................................................................................
@@ -6653,8 +6653,8 @@ let zone = 0
 let attacksflipped: Image[][] = []
 let melleattackslist: Image[][] = []
 let sword_compo = 0
-let attack_hitbox: Sprite = null
 let duraction_facing_left_or_right = 0
+let attack_hitbox: Sprite = null
 let maxPLayerLife = 0
 let playerlife = 0
 let NPCtext: fancyText.TextSprite = null
@@ -7139,6 +7139,25 @@ if (true) {
     create_ui()
     canrun = true
 }
+forever(function () {
+    for (let value of sprites.allOfKind(SpriteKind.Enemy)) {
+        if (sprites.readDataNumber(value, "movement_type") == 1) {
+            if (tiles.tileAtLocationIsWall(value.tilemapLocation().getNeighboringLocation(CollisionDirection.Left))) {
+                value.vx = sprites.readDataNumber(value, "speed")
+                sprites.setDataNumber(value, "Xmovement", sprites.readDataNumber(value, "speed"))
+            } else if (tiles.tileAtLocationIsWall(value.tilemapLocation().getNeighboringLocation(CollisionDirection.Right))) {
+                value.vx = 0 - sprites.readDataNumber(value, "speed")
+                sprites.setDataNumber(value, "Xmovement", 0 - sprites.readDataNumber(value, "speed"))
+            } else if (!(tiles.tileAtLocationIsWall(value.tilemapLocation().getNeighboringLocation(CollisionDirection.Bottom).getNeighboringLocation(CollisionDirection.Right)))) {
+                value.vx = 0 - sprites.readDataNumber(value, "speed")
+                sprites.setDataNumber(value, "Xmovement", 0 - sprites.readDataNumber(value, "speed"))
+            } else if (!(tiles.tileAtLocationIsWall(value.tilemapLocation().getNeighboringLocation(CollisionDirection.Bottom).getNeighboringLocation(CollisionDirection.Left)))) {
+                value.vx = sprites.readDataNumber(value, "speed")
+                sprites.setDataNumber(value, "Xmovement", sprites.readDataNumber(value, "speed"))
+            }
+        }
+    }
+})
 // the player ui and saving
 forever(function () {
     for (let value of sprites.allOfKind(SpriteKind.savepoint)) {
@@ -7837,33 +7856,6 @@ forever(function () {
     selected_item = sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection")
     moveBeteewnleveles()
 })
-game.onUpdate(function () {
-    if (camFallowPlayer) {
-        cam.x = mySprite.x
-        cam.y = mySprite.y
-    }
-    attack_hitbox.x = mySprite.x
-    attack_hitbox.y = mySprite.y
-})
-forever(function () {
-    for (let value of sprites.allOfKind(SpriteKind.Enemy)) {
-        if (sprites.readDataNumber(value, "movement_type") == 1) {
-            if (tiles.tileAtLocationIsWall(value.tilemapLocation().getNeighboringLocation(CollisionDirection.Left))) {
-                value.vx = sprites.readDataNumber(value, "speed")
-                sprites.setDataNumber(value, "Xmovement", sprites.readDataNumber(value, "speed"))
-            } else if (tiles.tileAtLocationIsWall(value.tilemapLocation().getNeighboringLocation(CollisionDirection.Right))) {
-                value.vx = 0 - sprites.readDataNumber(value, "speed")
-                sprites.setDataNumber(value, "Xmovement", 0 - sprites.readDataNumber(value, "speed"))
-            } else if (!(tiles.tileAtLocationIsWall(value.tilemapLocation().getNeighboringLocation(CollisionDirection.Bottom).getNeighboringLocation(CollisionDirection.Right)))) {
-                value.vx = 0 - sprites.readDataNumber(value, "speed")
-                sprites.setDataNumber(value, "Xmovement", 0 - sprites.readDataNumber(value, "speed"))
-            } else if (!(tiles.tileAtLocationIsWall(value.tilemapLocation().getNeighboringLocation(CollisionDirection.Bottom).getNeighboringLocation(CollisionDirection.Left)))) {
-                value.vx = sprites.readDataNumber(value, "speed")
-                sprites.setDataNumber(value, "Xmovement", sprites.readDataNumber(value, "speed"))
-            }
-        }
-    }
-})
 forever(function () {
     handle_npc_intractions()
     if (browserEvents.ArrowRight.isPressed()) {
@@ -8357,6 +8349,14 @@ forever(function () {
             }
         }
     }
+})
+game.onUpdate(function () {
+    if (camFallowPlayer) {
+        cam.x = mySprite.x
+        cam.y = mySprite.y
+    }
+    attack_hitbox.x = mySprite.x
+    attack_hitbox.y = mySprite.y
 })
 forever(function () {
     extraEffects.createSpreadEffectOnAnchor(cam, myEffect, 5000, 200, 20)

@@ -6756,6 +6756,9 @@ let menu_open = false
 let can_open_menu = false
 let camFallowPlayer = false
 let lockcontrols = false
+color.setColor(15, color.parseColorString("#180920"))
+color.setColor(9, color.parseColorString("#180920"))
+scene.setBackgroundColor(9)
 lockcontrols = false
 camFallowPlayer = false
 stats.turnStats(true)

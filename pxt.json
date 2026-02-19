@@ -18,7 +18,8 @@
         "arcade-sprite-util": "github:jwunderl/arcade-sprite-util#v0.5.0",
         "browser-events": "*",
         "arcade-character-animations": "github:microsoft/arcade-character-animations#v0.1.0",
-        "arcade-sprite-events": "github:riknoll/arcade-sprite-events#dc93eec8412053ebbd2b8f01cf5b6ae285d28900"
+        "arcade-sprite-events": "github:riknoll/arcade-sprite-events#dc93eec8412053ebbd2b8f01cf5b6ae285d28900",
+        "Color Fading": "github:jwunderl/pxt-color#v0.2.3"
     },
     "files": [
         "main.blocks",

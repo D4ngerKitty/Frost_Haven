@@ -266,13 +266,24 @@ function kill_player (text: string, text2: string) {
     )
     mySprite3.ay = 100
     mySprite3.vx = randint(-50, 50)
+    if (!(blockSettings.exists("player_deaths"))) {
+        blockSettings.writeNumber("player_deaths", 1)
+    } else {
+        blockSettings.writeNumber("player_deaths", blockSettings.readNumber("player_deaths") + 1)
+    }
     timer.background(function () {
         while (!(mySprite3.isHittingTile(CollisionDirection.Bottom))) {
             pause(10)
         }
         mySprite3.vx = 0
+        blockSettings.writeNumber("" + blockSettings.readNumber("player_deaths") + "x", mySprite3.x)
+        blockSettings.writeNumber("" + blockSettings.readNumber("player_deaths") + "y", mySprite3.y)
     })
     mySprite3.setPosition(mySprite.x, mySprite.y)
+    blockSettings.writeNumber("" + blockSettings.readNumber("player_deaths") + "zone in", zone)
+    blockSettings.writeNumber("" + blockSettings.readNumber("player_deaths") + "x", mySprite3.x)
+    blockSettings.writeNumber("" + blockSettings.readNumber("player_deaths") + "y", mySprite3.y)
+    blockSettings.writeNumber("" + blockSettings.readNumber("player_deaths") + "left or right", mySprite3.vx)
     mySprite.setFlag(SpriteFlag.Ghost, true)
     canrun = false
     can_open_menu = false
@@ -294,6 +305,10 @@ function kill_player (text: string, text2: string) {
     main_menu_text.setFlag(SpriteFlag.RelativeToCamera, true)
     main_menu_text.z = 1000
     main_menu_text.setPosition(85, 70)
+    main_menu_text = fancyText.create("deaths: " + blockSettings.readNumber("player_deaths"), 0, 4, fancyText.italic_small)
+    main_menu_text.setFlag(SpriteFlag.RelativeToCamera, true)
+    main_menu_text.z = 1000
+    main_menu_text.setPosition(85, 92)
     sprites.destroy(thelifesprtie)
     pauseUntil(() => browserEvents.Z.isPressed())
     game.reset()
@@ -2714,6 +2729,74 @@ function createlevel (num: number) {
         true
         )
         tiles.placeOnTile(check_point, value)
+    }
+    if (blockSettings.exists("player_deaths")) {
+        deaths = 1
+        for (let index = 0; index < blockSettings.readNumber("player_deaths"); index++) {
+            if (blockSettings.readNumber("" + deaths + "zone in") == zone) {
+                mySprite3 = sprites.create(img`
+                    . . . . . . . . . . . . . . . . 
+                    . 2 . 2 . . . . . . . . . . . . 
+                    . 2 2 2 . . 2 2 2 . . 2 . 2 . . 
+                    . . . 2 2 2 2 2 2 2 . 2 2 2 . . 
+                    . . . . . 2 2 8 2 8 2 2 . . . . 
+                    . . . . . 2 2 3 2 2 . . . . . . 
+                    . . . . . . 2 2 2 . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `, SpriteKind.background)
+                mySprite3.setPosition(blockSettings.readNumber("" + deaths + "x"), blockSettings.readNumber("" + deaths + "y"))
+                console.log(blockSettings.readNumber("" + deaths + "x"))
+                console.log(blockSettings.readNumber("" + deaths + "y"))
+                if (0 < blockSettings.readNumber("" + deaths + "left or right")) {
+                    mySprite3.setImage(img`
+                        . . . . . . . . . . . . . . . . 
+                        . 2 . 2 . . . . . . . . . . . . 
+                        . 2 2 2 . . 2 2 2 . . 2 . 2 . . 
+                        . . . 2 2 2 2 2 2 2 . 2 2 2 . . 
+                        . . . . . 2 2 8 2 8 2 2 . . . . 
+                        . . . . . 2 2 3 2 2 . . . . . . 
+                        . . . . . . 2 2 2 . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        `)
+                } else {
+                    mySprite3.setImage(img`
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . 2 . 2 . 
+                        . . 2 . 2 . . 2 2 2 . . 2 2 2 . 
+                        . . 2 2 2 . 2 2 2 2 2 2 2 . . . 
+                        . . . . 2 2 8 2 8 2 2 . . . . . 
+                        . . . . . . 2 2 3 2 2 . . . . . 
+                        . . . . . . . 2 2 2 . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        `)
+                }
+            }
+            deaths += 1
+        }
     }
 }
 function dash (howfar: number, durection: number) {
@@ -6718,11 +6801,11 @@ let selected_item = 0
 let selceontype = ""
 let playersleep = 0
 let partical: Sprite = null
+let deaths = 0
 let check_point: Sprite = null
 let mySprite5: Sprite = null
 let mySprite4: Sprite = null
 let mySprite2: Sprite = null
-let zone = 0
 let attacksflipped: Image[][] = []
 let melleattackslist: Image[][] = []
 let sword_compo = 0
@@ -6733,6 +6816,7 @@ let playerlife = 0
 let NPCtext: fancyText.TextSprite = null
 let incutesence = false
 let thelifesprtie: Sprite = null
+let zone = 0
 let mySprite3: Sprite = null
 let main_menu_text: fancyText.TextSprite = null
 let mainstartmenu = false

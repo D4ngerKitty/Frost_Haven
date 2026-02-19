@@ -200,6 +200,79 @@ browserEvents.ArrowUp.onEvent(browserEvents.KeyEvent.Pressed, function () {
 })
 function kill_player (text: string, text2: string) {
     mySprite.setFlag(SpriteFlag.Invisible, true)
+    mySprite3 = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . 2 . 2 . . . . . . . . . . . . 
+        . 2 2 2 . . 2 2 2 . . 2 . 2 . . 
+        . . . 2 2 2 2 2 2 2 . 2 2 2 . . 
+        . . . . . 2 2 8 2 8 2 2 . . . . 
+        . . . . . 2 2 3 2 2 . . . . . . 
+        . . . . . . 2 2 2 . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.background)
+    characterAnimations.loopFrames(
+    mySprite3,
+    [img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . 2 . 2 . 
+        . . 2 . 2 . . 2 2 2 . . 2 2 2 . 
+        . . 2 2 2 . 2 2 2 2 2 2 2 . . . 
+        . . . . 2 2 8 2 8 2 2 . . . . . 
+        . . . . . . 2 2 3 2 2 . . . . . 
+        . . . . . . . 2 2 2 . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `],
+    500,
+    characterAnimations.rule(Predicate.FacingLeft)
+    )
+    characterAnimations.loopFrames(
+    mySprite3,
+    [img`
+        . . . . . . . . . . . . . . . . 
+        . 2 . 2 . . . . . . . . . . . . 
+        . 2 2 2 . . 2 2 2 . . 2 . 2 . . 
+        . . . 2 2 2 2 2 2 2 . 2 2 2 . . 
+        . . . . . 2 2 8 2 8 2 2 . . . . 
+        . . . . . 2 2 3 2 2 . . . . . . 
+        . . . . . . 2 2 2 . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `],
+    500,
+    characterAnimations.rule(Predicate.FacingRight)
+    )
+    mySprite3.ay = 100
+    mySprite3.vx = randint(-50, 50)
+    timer.background(function () {
+        while (!(mySprite3.isHittingTile(CollisionDirection.Bottom))) {
+            pause(10)
+        }
+        mySprite3.vx = 0
+    })
+    mySprite3.setPosition(mySprite.x, mySprite.y)
     mySprite.setFlag(SpriteFlag.Ghost, true)
     canrun = false
     can_open_menu = false
@@ -3104,7 +3177,7 @@ function createplayer () {
     platformer.rule(platformer.PlatformerSpriteState.FacingRight, platformer.PlatformerSpriteState.Moving)
     )
     mySprite.x += 3
-    platformer.setCharacterAnimationsEnabled(mySprite, false)
+    platformer.setCharacterAnimationsEnabled(mySprite, true)
     platformer.setConstantDefault(platformer.PlatformerConstant.InAirJumps, 1)
     platformer.setConstantDefault(platformer.PlatformerConstant.InAirJumpHeight, 40)
     platformer.setConstantDefault(platformer.PlatformerConstant.WallFriction, 200)
@@ -6660,6 +6733,7 @@ let playerlife = 0
 let NPCtext: fancyText.TextSprite = null
 let incutesence = false
 let thelifesprtie: Sprite = null
+let mySprite3: Sprite = null
 let main_menu_text: fancyText.TextSprite = null
 let mainstartmenu = false
 let thetalismanslotvar = 0

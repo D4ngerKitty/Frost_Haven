@@ -123,65 +123,6 @@ browserEvents.X.onEvent(browserEvents.KeyEvent.Pressed, function () {
         }
     }
 })
-function update_invantory (array: any[]) {
-    number = 0
-    for (let value of theinvantorylist) {
-        if (!(value == -1)) {
-            sprites.setDataNumber(sprites.readDataSprite(invantory, "" + number), "item_id", value)
-            sprites.setDataString(sprites.readDataSprite(invantory, "" + number), "item_type", item_type[value])
-            sprites.readDataSprite(invantory, "" + number).setImage(items_images[value])
-        } else {
-            sprites.setDataString(sprites.readDataSprite(invantory, "" + number), "item_type", "blank")
-            sprites.readDataSprite(invantory, "" + number).setImage(img`
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                `)
-        }
-        number += 1
-    }
-    if (!(theAbutton == -1)) {
-        sprites.setDataNumber(sprites.readDataSprite(invantory, "sword slot"), "item_id", theAbutton)
-        sprites.setDataString(sprites.readDataSprite(invantory, "sword slot"), "item_type", item_type[theAbutton])
-        sprites.readDataSprite(invantory, "sword slot").setImage(items_images[theAbutton])
-    } else {
-        sprites.setDataString(sprites.readDataSprite(invantory, "sword slot"), "item_type", "blank")
-    }
-    if (!(armer_slot == -1)) {
-        sprites.setDataNumber(sprites.readDataSprite(invantory, "cloakslot"), "item_id", armer_slot)
-        sprites.setDataString(sprites.readDataSprite(invantory, "cloakslot"), "item_type", item_type[armer_slot])
-        sprites.readDataSprite(invantory, "cloakslot").setImage(items_images[armer_slot])
-    } else {
-        sprites.setDataString(sprites.readDataSprite(invantory, "cloakslot"), "item_type", "blank")
-    }
-    if (!(theBbuttonitem == -1)) {
-        sprites.setDataNumber(sprites.readDataSprite(invantory, "Bbottonslot"), "item_id", theBbuttonitem)
-        sprites.setDataString(sprites.readDataSprite(invantory, "Bbottonslot"), "item_type", item_type[theBbuttonitem])
-        sprites.readDataSprite(invantory, "Bbottonslot").setImage(items_images[theBbuttonitem])
-    } else {
-        sprites.setDataString(sprites.readDataSprite(invantory, "Bbottonslot"), "item_type", "blank")
-    }
-    if (!(thetalismanslotvar == -1)) {
-        sprites.setDataNumber(sprites.readDataSprite(invantory, "talismanslot"), "item_id", thetalismanslotvar)
-        sprites.setDataString(sprites.readDataSprite(invantory, "talismanslot"), "item_type", item_type[thetalismanslotvar])
-        sprites.readDataSprite(invantory, "talismanslot").setImage(items_images[thetalismanslotvar])
-    } else {
-        sprites.setDataString(sprites.readDataSprite(invantory, "talismanslot"), "item_type", "blank")
-    }
-}
 browserEvents.ArrowUp.onEvent(browserEvents.KeyEvent.Pressed, function () {
     if (!(menu_open)) {
         move_selector(-4, "up")
@@ -469,6 +410,66 @@ function handle_npc_intractions () {
         }
     }
 }
+function Refresh_invantory () {
+    invantory.setImage(assests[0].clone())
+    number = 0
+    for (let value of theinvantorylist) {
+        if (!(value == -1)) {
+            sprites.setDataNumber(invantory, "" + number + "item_id", value)
+            sprites.setDataString(invantory, "" + number + "item_type", item_type[value])
+            spriteutils.drawTransparentImage(items_images[value], invantory.image, invantory_X[number], Invantory_Y[number])
+        } else {
+            sprites.setDataString(invantory, "" + number + "item_type", "blank")
+        }
+        number += 1
+    }
+    if (!(theAbutton == -1)) {
+        sprites.setDataNumber(invantory, "sword slot_id", theAbutton)
+        sprites.setDataString(invantory, "sword slot_type", item_type[theAbutton])
+        spriteutils.drawTransparentImage(items_images[theAbutton], invantory.image, 107, 44)
+    } else {
+        sprites.setDataString(invantory, "sword slot_type", "blank")
+    }
+    if (!(theBbuttonitem == -1)) {
+        sprites.setDataNumber(invantory, "Bbottonslot_id", theBbuttonitem)
+        sprites.setDataString(invantory, "Bbottonslot_type", item_type[theBbuttonitem])
+        spriteutils.drawTransparentImage(items_images[theBbuttonitem], invantory.image, 107, 61)
+    } else {
+        sprites.setDataString(sprites.readDataSprite(invantory, "Bbottonslot"), "item_type", "blank")
+    }
+    if (!(thetalismanslotvar == -1)) {
+        sprites.setDataNumber(invantory, "talismen_id", thetalismanslotvar)
+        sprites.setDataString(invantory, "talismen_type", item_type[thetalismanslotvar])
+        spriteutils.drawTransparentImage(items_images[thetalismanslotvar], invantory.image, 124, 61)
+    } else {
+        sprites.setDataString(invantory, "talismen_type", "blank")
+    }
+    if (!(armer_slot == -1)) {
+        sprites.setDataNumber(invantory, "cloakslot_id", armer_slot)
+        sprites.setDataString(invantory, "cloakslot_type", item_type[armer_slot])
+        spriteutils.drawTransparentImage(items_images[armer_slot], invantory.image, 124, 44)
+    } else {
+        sprites.setDataString(sprites.readDataSprite(invantory, "cloakslot"), "item_type", "blank")
+    }
+    spriteutils.drawTransparentImage(img`
+        . 3 3 3 3 3 3 . . 3 3 3 3 3 3 . 
+        3 . . . . . . . . . . . . . . 3 
+        3 . . . . . . . . . . . . . . 3 
+        3 . . . . . . . . . . . . . . 3 
+        3 . . . . . . . . . . . . . . 3 
+        3 . . . . . . . . . . . . . . 3 
+        3 . . . . . . . . . . . . . . 3 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        3 . . . . . . . . . . . . . . 3 
+        3 . . . . . . . . . . . . . . 3 
+        3 . . . . . . . . . . . . . . 3 
+        3 . . . . . . . . . . . . . . 3 
+        3 . . . . . . . . . . . . . . 3 
+        3 . . . . . . . . . . . . . . 3 
+        . 3 3 3 3 3 3 . . 3 3 3 3 3 3 . 
+        `, invantory.image, invantory_X[sprites.readDataNumber(invantory, "selection")], Invantory_Y[sprites.readDataNumber(invantory, "selection")])
+}
 browserEvents.C.onEvent(browserEvents.KeyEvent.Pressed, function () {
     if (!(lockcontrols && (incutesence && mainstartmenu))) {
         if (!(inattack)) {
@@ -570,6 +571,10 @@ browserEvents.C.onEvent(browserEvents.KeyEvent.Pressed, function () {
         }
     }
 })
+function addXandY (x: number, y: number) {
+    invantory_X.push(x)
+    Invantory_Y.push(y)
+}
 function createlevel (num: number) {
     sprites.destroyAllSpritesOfKind(SpriteKind.npc)
     sprites.destroyAllSpritesOfKind(SpriteKind.background)
@@ -3627,36 +3632,35 @@ function introtext (text: string) {
     sprites.destroy(NPCtext)
 }
 function move_item () {
-    if (selceontype == item_type[0]) {
+    if (sprites.readDataString(invantory, "" + sprites.readDataNumber(invantory, "selection") + "item_type") == item_type[0]) {
         music.play(music.createSoundEffect(WaveShape.Square, 1857, 1, 19, 173, 100, SoundExpressionEffect.Vibrato, InterpolationCurve.Curve), music.PlaybackMode.InBackground)
-        theAbutton = sprites.readDataNumber(sprites.readDataSprite(invantory, "" + selected_item), "item_id") + 0
+        theAbutton = sprites.readDataNumber(invantory, "" + sprites.readDataNumber(invantory, "selection") + "item_id") + 0
         console.log(theAbutton)
-        sprites.setDataNumber(sprites.readDataSprite(invantory, "" + selected_item), "item_id", sprites.readDataNumber(sprites.readDataSprite(invantory, "sword slot"), "item_id"))
-        sprites.setDataNumber(sprites.readDataSprite(invantory, "sword slot"), "item_id", theAbutton)
+        sprites.setDataNumber(invantory, "" + sprites.readDataNumber(invantory, "selection") + "item_id", sprites.readDataNumber(invantory, "sword slot_id"))
+        sprites.setDataNumber(invantory, "sword slot_id", theAbutton)
     }
-    if (selceontype == item_type[5]) {
+    if (sprites.readDataString(invantory, "" + sprites.readDataNumber(invantory, "selection") + "item_type") == item_type[5]) {
         music.play(music.createSoundEffect(WaveShape.Square, 1857, 1, 19, 173, 100, SoundExpressionEffect.Vibrato, InterpolationCurve.Curve), music.PlaybackMode.InBackground)
-        theBbuttonitem = sprites.readDataNumber(sprites.readDataSprite(invantory, "" + selected_item), "item_id") + 0
+        theBbuttonitem = sprites.readDataNumber(invantory, "" + sprites.readDataNumber(invantory, "selection") + "item_id") + 0
         console.log(theBbuttonitem)
-        sprites.setDataNumber(sprites.readDataSprite(invantory, "" + selected_item), "item_id", sprites.readDataNumber(sprites.readDataSprite(invantory, "Bbottonslot"), "item_id"))
-        sprites.setDataNumber(sprites.readDataSprite(invantory, "Bbottonslot"), "item_id", theBbuttonitem)
+        sprites.setDataNumber(invantory, "" + sprites.readDataNumber(invantory, "selection") + "item_id", sprites.readDataNumber(invantory, "Bbottonslot_id"))
+        sprites.setDataNumber(invantory, "Bbottonslot_id", theBbuttonitem)
     }
-    if (selceontype == item_type[4]) {
+    if (sprites.readDataString(invantory, "" + sprites.readDataNumber(invantory, "selection") + "item_type") == item_type[4]) {
         music.play(music.createSoundEffect(WaveShape.Square, 1857, 1, 19, 173, 100, SoundExpressionEffect.Vibrato, InterpolationCurve.Curve), music.PlaybackMode.InBackground)
-        thetalismanslotvar = sprites.readDataNumber(sprites.readDataSprite(invantory, "" + selected_item), "item_id") + 0
+        thetalismanslotvar = sprites.readDataNumber(invantory, "" + sprites.readDataNumber(invantory, "selection") + "item_id") + 0
         console.log(theBbuttonitem)
-        sprites.setDataNumber(sprites.readDataSprite(invantory, "" + selected_item), "item_id", sprites.readDataNumber(sprites.readDataSprite(invantory, "talismanslot"), "item_id"))
-        sprites.setDataNumber(sprites.readDataSprite(invantory, "talismanslot"), "item_id", thetalismanslotvar)
+        sprites.setDataNumber(invantory, "" + sprites.readDataNumber(invantory, "selection") + "item_id", sprites.readDataNumber(invantory, "talismen_id"))
+        sprites.setDataNumber(invantory, "talismen_id", thetalismanslotvar)
     }
     update_this_lists()
-    update_invantory(theinvantorylist)
+    Refresh_invantory()
 }
 function pull_up_invantory () {
     if (can_open_menu) {
         music.play(music.createSoundEffect(WaveShape.Square, 1857, 1, 19, 173, 100, SoundExpressionEffect.Vibrato, InterpolationCurve.Curve), music.PlaybackMode.InBackground)
         if (menu_open) {
             menu_open = false
-            update_invantory(theinvantorylist)
             if (!(incutesence)) {
                 canrun = false
                 platformer.moveSprite(mySprite, false)
@@ -6490,22 +6494,25 @@ function hadle_items () {
         . . . . . . . 6 6 . . . . . . . 
         `, "b", 7)
     add_item("dash3", img`
-        . . . . . . . . . . . . . . . . 
-        . . 7 7 6 6 6 6 6 6 6 6 7 7 . . 
-        . 7 7 7 6 4 4 4 4 6 4 6 7 7 7 . 
-        . 7 7 5 6 4 6 6 6 6 6 6 5 7 7 . 
-        . 7 7 5 6 4 4 4 4 4 4 6 5 7 7 . 
-        . 7 7 5 6 6 6 6 6 6 6 6 5 7 7 . 
-        . 7 7 5 6 4 6 4 4 4 4 6 5 7 7 . 
-        . 7 7 5 6 6 6 6 6 6 4 6 5 7 7 . 
-        . 7 7 5 6 4 4 4 4 4 4 6 5 7 7 . 
-        . 7 7 5 6 6 6 6 6 6 6 6 5 7 7 . 
-        . 7 7 5 6 4 4 4 4 6 4 6 5 7 7 . 
-        . 7 7 7 6 4 6 6 6 6 6 6 7 7 7 . 
-        . 7 7 7 6 4 4 4 4 4 4 6 7 7 7 . 
-        . 7 7 7 6 6 6 6 6 6 6 6 7 7 7 . 
-        . . 7 7 7 6 6 6 6 6 6 7 7 7 . . 
-        . . . . . . . 6 6 . . . . . . . 
+        ................
+        ...7777777777...
+        ..776666666677..
+        .77764444646777.
+        .77564666666577.
+        .77564444446577.
+        .77566666666577.
+        .77564644446577.
+        .77566666646577.
+        .77564444446577.
+        .77566666666577.
+        .77564444646577.
+        .77764666666777.
+        ..776444444677..
+        ...7666666667...
+        .....666666.....
+        .....666666.....
+        .......66.......
+        ................
         `, "b", 8)
     if (!(blockSettings.exists("the invantory"))) {
         blockSettings.writeNumberArray("the invantory", [
@@ -6526,9 +6533,9 @@ function hadle_items () {
     theBbuttonitem = blockSettings.readNumber("theBbutton")
     thetalismanslotvar = blockSettings.readNumber("talismanslot")
     theinvantorylist = blockSettings.readNumberArray("the invantory")
-    update_invantory(theinvantorylist)
+    Refresh_invantory()
     update_this_lists()
-    update_invantory(theinvantorylist)
+    Refresh_invantory()
 }
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     if (!(menu_open)) {
@@ -6543,38 +6550,38 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
 function move_selector (num: number, text: string) {
     if (true) {
         music.play(music.createSoundEffect(WaveShape.Square, 1110, 0, 142, 0, 100, SoundExpressionEffect.Vibrato, InterpolationCurve.Logarithmic), music.PlaybackMode.InBackground)
-        sprites.changeDataNumberBy(sprites.readDataSprite(invantory, "sealector"), "selection", num)
-        if (sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection") >= 16) {
+        sprites.changeDataNumberBy(invantory, "selection", num)
+        if (sprites.readDataNumber(invantory, "selection") >= 16) {
             if (text == "down") {
-                if (sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection") == 16) {
-                    sprites.setDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection", 0)
-                } else if (sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection") == 17) {
-                    sprites.setDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection", 1)
-                } else if (sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection") == 18) {
-                    sprites.setDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection", 2)
-                } else if (sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection") == 19) {
-                    sprites.setDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection", 3)
+                if (sprites.readDataNumber(invantory, "selection") == 16) {
+                    sprites.setDataNumber(invantory, "selection", 0)
+                } else if (sprites.readDataNumber(invantory, "selection") == 17) {
+                    sprites.setDataNumber(invantory, "selection", 1)
+                } else if (sprites.readDataNumber(invantory, "selection") == 18) {
+                    sprites.setDataNumber(invantory, "selection", 2)
+                } else if (sprites.readDataNumber(invantory, "selection") == 19) {
+                    sprites.setDataNumber(invantory, "selection", 3)
                 }
             } else {
-                sprites.setDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection", 0)
+                sprites.setDataNumber(invantory, "selection", 0)
             }
-        } else if (sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection") <= -1) {
+        } else if (sprites.readDataNumber(invantory, "selection") <= -1) {
             if (text == "up") {
-                if (sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection") == -4) {
-                    sprites.setDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection", 12)
-                } else if (sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection") == -3) {
-                    sprites.setDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection", 13)
-                } else if (sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection") == -2) {
-                    sprites.setDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection", 14)
-                } else if (sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection") == -1) {
-                    sprites.setDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection", 15)
+                if (sprites.readDataNumber(invantory, "selection") == -4) {
+                    sprites.setDataNumber(invantory, "selection", 12)
+                } else if (sprites.readDataNumber(invantory, "selection") == -3) {
+                    sprites.setDataNumber(invantory, "selection", 13)
+                } else if (sprites.readDataNumber(invantory, "selection") == -2) {
+                    sprites.setDataNumber(invantory, "selection", 14)
+                } else if (sprites.readDataNumber(invantory, "selection") == -1) {
+                    sprites.setDataNumber(invantory, "selection", 15)
                 }
             } else {
-                sprites.setDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection", 16)
-                sprites.changeDataNumberBy(sprites.readDataSprite(invantory, "sealector"), "selection", num)
+                sprites.setDataNumber(invantory, "selection", 16)
+                sprites.changeDataNumberBy(invantory, "selection", num)
             }
         }
-        sprites.readDataSprite(invantory, "sealector").setPosition(sprites.readDataSprite(invantory, "" + sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection")).x, sprites.readDataSprite(invantory, "" + sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection")).y)
+        Refresh_invantory()
     }
 }
 function START_CUTSENSE () {
@@ -6646,15 +6653,17 @@ function main_menu () {
     sprites.setDataNumber(main_menu_text, "menu_item_picked", 1)
 }
 function update_this_lists () {
-    theinvantorylist = []
-    for (let index = 0; index <= 15; index++) {
-        theinvantorylist.push(sprites.readDataNumber(sprites.readDataSprite(invantory, "" + index), "item_id"))
+    if (true) {
+        theinvantorylist = []
+        for (let index = 0; index <= 15; index++) {
+            theinvantorylist.push(sprites.readDataNumber(invantory, "" + index + "item_id"))
+        }
+        theAbutton = sprites.readDataNumber(invantory, "sword slot_id")
+        armer_slot = sprites.readDataNumber(invantory, "cloakslot_id")
+        theBbuttonitem = sprites.readDataNumber(invantory, "Bbottonslot_id")
+        console.log(theinvantorylist)
+        console.log(theAbutton)
     }
-    theAbutton = sprites.readDataNumber(sprites.readDataSprite(invantory, "sword slot"), "item_id")
-    armer_slot = sprites.readDataNumber(sprites.readDataSprite(invantory, "cloakslot"), "item_id")
-    theBbuttonitem = sprites.readDataNumber(sprites.readDataSprite(invantory, "Bbottonslot"), "item_id")
-    console.log(theinvantorylist)
-    console.log(theAbutton)
 }
 function moveBeteewnleveles () {
     if (zone == 0) {
@@ -6866,30 +6875,40 @@ function create_invantory () {
     invantory.setFlag(SpriteFlag.Invisible, true)
     invantory.setFlag(SpriteFlag.RelativeToCamera, true)
     create_invatnotory_slots(15)
-    spriteutils.drawTransparentImage(img`
-        . 3 3 3 3 3 3 . . 3 3 3 3 3 3 . 
-        3 . . . . . . . . . . . . . . 3 
-        3 . . . . . . . . . . . . . . 3 
-        3 . . . . . . . . . . . . . . 3 
-        3 . . . . . . . . . . . . . . 3 
-        3 . . . . . . . . . . . . . . 3 
-        3 . . . . . . . . . . . . . . 3 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        3 . . . . . . . . . . . . . . 3 
-        3 . . . . . . . . . . . . . . 3 
-        3 . . . . . . . . . . . . . . 3 
-        3 . . . . . . . . . . . . . . 3 
-        3 . . . . . . . . . . . . . . 3 
-        3 . . . . . . . . . . . . . . 3 
-        . 3 3 3 3 3 3 . . 3 3 3 3 3 3 . 
-        `, invantory.image, 20, 10)
+    invantory_X = []
+    Invantory_Y = []
+    addXandY(20, 10)
+    addXandY(37, 10)
+    addXandY(54, 10)
+    addXandY(71, 10)
+    addXandY(20, 27)
+    addXandY(37, 27)
+    addXandY(54, 27)
+    addXandY(71, 27)
+    addXandY(20, 44)
+    addXandY(37, 44)
+    addXandY(54, 44)
+    addXandY(71, 44)
+    addXandY(20, 61)
+    addXandY(37, 61)
+    addXandY(54, 61)
+    addXandY(71, 61)
+    sprites.setDataNumber(invantory, "selection", 0)
+    Refresh_invantory()
+    sprites.setDataNumber(invantory, "sword slot_id", -1)
+    sprites.setDataString(invantory, "sword slot_type", "blank")
+    sprites.setDataNumber(invantory, "cloakslot_id", -1)
+    sprites.setDataString(invantory, "cloakslot_type", "blank")
+    sprites.setDataNumber(invantory, "Bbottonslot_id", -1)
+    sprites.setDataString(invantory, "Bbottonslot_type", "blank")
+    sprites.setDataNumber(invantory, "talismen_id", -1)
+    sprites.setDataString(invantory, "talismen_type", "blank")
 }
+let selected_item = 0
+let selceontype = ""
 let aNPC: Sprite = null
 let path: TilemapPath.TilemapPath = null
 let items_names: string[] = []
-let selected_item = 0
-let selceontype = ""
 let playersleep = 0
 let partical: Sprite = null
 let deaths = 0
@@ -6902,8 +6921,19 @@ let melleattackslist: Image[][] = []
 let sword_compo = 0
 let duraction_facing_left_or_right = 0
 let attack_hitbox: Sprite = null
+let armer_slot = 0
+let thetalismanslotvar = 0
+let theBbuttonitem = 0
+let theAbutton = 0
+let Invantory_Y: number[] = []
+let invantory_X: number[] = []
+let item_type: string[] = []
+let theinvantorylist: number[] = []
+let number = 0
 let maxPLayerLife = 0
 let playerlife = 0
+let items_images: Image[] = []
+let invantory: Sprite = null
 let NPCtext: fancyText.TextSprite = null
 let incutesence = false
 let thelifesprtie: Sprite = null
@@ -6911,15 +6941,6 @@ let zone = 0
 let mySprite3: Sprite = null
 let main_menu_text: fancyText.TextSprite = null
 let mainstartmenu = false
-let thetalismanslotvar = 0
-let theBbuttonitem = 0
-let armer_slot = 0
-let theAbutton = 0
-let items_images: Image[] = []
-let item_type: string[] = []
-let invantory: Sprite = null
-let theinvantorylist: number[] = []
-let number = 0
 let dashes = 0
 let mySprite: Sprite = null
 let indash = false

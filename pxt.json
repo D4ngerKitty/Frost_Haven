@@ -19,7 +19,8 @@
         "browser-events": "*",
         "arcade-character-animations": "github:microsoft/arcade-character-animations#v0.1.0",
         "arcade-sprite-events": "github:riknoll/arcade-sprite-events#dc93eec8412053ebbd2b8f01cf5b6ae285d28900",
-        "Color Fading": "github:jwunderl/pxt-color#v0.2.3"
+        "Color Fading": "github:jwunderl/pxt-color#v0.2.3",
+        "arcade-tile-util": "github:microsoft/arcade-tile-util#v1.2.0"
     },
     "files": [
         "main.blocks",
@@ -36,7 +37,7 @@
         "branch": "v2.0.63",
         "tag": "v2.0.63",
         "commits": "https://github.com/microsoft/pxt-arcade/commits/5f6dbe1863a184bb2cde85fd93133e94e9719e03",
-        "target": "4.0.7",
+        "target": "4.0.8",
         "pxt": "11.3.68",
         "targetId": "arcade"
     },

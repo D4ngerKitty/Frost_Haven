@@ -7935,7 +7935,7 @@ function moveBeteewnleveles () {
         }
         if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile75`) || (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile74`) || mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile77`))) {
             createlevel(200)
-            tiles.placeOnTile(mySprite, tiles.getTileLocation(11, 4))
+            tiles.placeOnTile(mySprite, tiles.getTileLocation(21, 4))
         }
     }
 }

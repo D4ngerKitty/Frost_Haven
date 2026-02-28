@@ -8,6 +8,7 @@ namespace SpriteKind {
     export const typepartical = SpriteKind.create()
     export const savepoint = SpriteKind.create()
     export const playerAttackHitboxType = SpriteKind.create()
+    export const item = SpriteKind.create()
 }
 function summon_enemy (tile_repaced: Image, ememy_type: string) {
     if (ememy_type == "bug_1") {
@@ -101,7 +102,7 @@ function summon_enemy (tile_repaced: Image, ememy_type: string) {
             enemysprite.vx = sprites.readDataNumber(enemysprite, "speed")
             enemysprite.ay = 150
             tiles.placeOnTile(enemysprite, value)
-            tiles.setTileAt(value, assets.tile`myTile5`)
+            tiles.setTileAt(value, tile_repaced)
         }
     }
 }
@@ -276,6 +277,8 @@ function move_into_house (num: number, which_house: number) {
             tiles.placeOnTile(mySprite, tiles.getTileLocation(23, 18))
         } else if (which_house == 3) {
             tiles.placeOnTile(mySprite, tiles.getTileLocation(39, 19))
+        } else if (which_house == 4) {
+            tiles.placeOnTile(mySprite, tiles.getTileLocation(47, 18))
         }
     }
 }
@@ -435,11 +438,12 @@ function handle_npc_intractions () {
                     } else {
                         MakeNPCText("I see all")
                         MakeNPCText("eveyrthing")
-                        MakeNPCText("I see a great evil deep deep down")
+                        MakeNPCText("even you young one")
                     }
                 } else if (sprites.readDataNumber(value, "NPCID") == 5) {
                     MakeNPCText("Hello young one")
-                    MakeNPCText("I got a spare sword for you if you help me out with a flew things")
+                    MakeNPCText("I lost my sword the other day going down to the caves ")
+                    MakeNPCText("Luckily i was given a new one but it isn't as good")
                 } else if (sprites.readDataNumber(value, "NPCID") == 4) {
                     MakeNPCText("Heyo")
                     MakeNPCText("if you can help me with some things I can give you something spical ")
@@ -447,14 +451,39 @@ function handle_npc_intractions () {
                     MakeNPCText("Hello!")
                     MakeNPCText("Its rare to see titan around here we never see your kind around")
                     MakeNPCText("I've never seen a titan in its prime i've heard they can grow to be huge")
+                } else if (sprites.readDataNumber(value, "NPCID") == 7) {
+                    MakeNPCText("Right here is the entrance old caves")
+                    MakeNPCText("Last time we went down there my friend lost their sword")
+                    MakeNPCText("I can't belive he lost it")
                 }
             }
+        }
+    }
+    for (let value of spriteutils.getSpritesWithin(SpriteKind.item, 17, mySprite)) {
+        value.sayText("V", 100, false)
+        if (browserEvents.V.isPressed()) {
+            value.sayText("")
+            MakeNPCText("You got a item check your invantory")
+            for (let index = 0; index <= 15; index++) {
+                if (theinvantorylist[index] == -1) {
+                    theinvantorylist[index] = sprites.readDataNumber(value, "what_item_it_it_is")
+                    break;
+                }
+            }
+            sprites.destroy(value)
+            console.log(theinvantorylist.length)
+            Refresh_invantory()
         }
     }
     if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile56`)) {
         mySprite.sayText("V", 100, false)
     } else if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile65`)) {
         mySprite.sayText("V", 100, false)
+    }
+    if (zone == 200) {
+        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile13`)) {
+            mySprite.sayText("V", 100, false)
+        }
     }
 }
 function Refresh_invantory () {
@@ -623,9 +652,12 @@ function addXandY (x: number, y: number) {
     Invantory_Y.push(y)
 }
 function createlevel (num: number) {
+    snow_onoff = true
     sprites.destroyAllSpritesOfKind(SpriteKind.npc)
     sprites.destroyAllSpritesOfKind(SpriteKind.background)
+    sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
     sprites.destroyAllSpritesOfKind(SpriteKind.savepoint)
+    sprites.destroyAllSpritesOfKind(SpriteKind.item)
     zone = num
     if (num == 0) {
         tiles.setCurrentTilemap(tilemap`level3`)
@@ -1554,92 +1586,94 @@ function createlevel (num: number) {
         true
         )
         tiles.placeOnRandomTile(mySprite, assets.tile`myTile12`)
-        makeNpc(1, assets.tile`myTile15`, [img`
-            . . . . . . . . . . 2 . 2 . . . 
-            2 . 2 . . 3 3 3 . . 2 2 2 . . . 
-            2 2 2 . 3 3 3 3 3 2 2 . . . . . 
-            . . 2 2 3 3 1 3 1 . . . . . . . 
-            . . . . 1 3 3 3 3 . . 8 8 . . . 
-            . . . . 1 1 1 1 1 . . 8 8 . . . 
-            . . . . 1 1 1 1 1 . . 8 8 . . . 
-            . 6 6 6 6 1 1 1 1 . . 8 8 . . . 
-            6 6 6 6 6 5 1 1 . . 8 8 . . . . 
-            6 6 5 5 5 6 6 6 . . 8 8 . . . . 
-            5 5 6 6 6 6 5 5 . . 8 8 . . . . 
-            6 6 6 6 5 5 7 7 7 7 7 7 . . . . 
-            6 6 5 5 7 7 7 7 7 7 7 4 . . . . 
-            5 5 7 7 7 7 7 7 7 8 7 . . . . . 
-            6 6 6 6 7 6 7 . . 8 7 . . . . . 
-            6 6 6 6 6 6 6 . . 8 8 . . . . . 
-            `,img`
-            . . . . . . . . . . 2 . 2 . . . 
-            2 . 2 . . 3 3 3 . . 2 2 2 . . . 
-            2 2 2 . 3 3 3 3 3 2 2 . . . . . 
-            . . 2 2 3 3 1 3 1 . . . . . . . 
-            . . . . 1 3 3 3 3 . . 8 8 . . . 
-            . . . . 1 1 1 1 1 . . 8 8 . . . 
-            . . . . 1 1 1 1 1 . . 8 8 . . . 
-            . 6 6 6 6 1 1 1 1 . . 8 8 . . . 
-            6 6 6 6 6 5 1 1 . . 8 8 . . . . 
-            6 6 5 5 5 6 6 6 . . 8 8 . . . . 
-            5 5 6 6 6 6 5 5 . . 8 8 . . . . 
-            6 6 6 6 5 5 7 7 7 7 7 7 . . . . 
-            6 6 5 5 7 7 7 7 7 7 7 4 . . . . 
-            5 5 7 7 7 7 7 7 7 8 7 . . . . . 
-            6 6 6 6 7 6 7 . . 8 7 . . . . . 
-            6 6 6 6 6 6 6 . . 8 8 . . . . . 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . 2 . 2 . . . 
-            2 . 2 . . 3 3 3 . . 2 2 2 . . . 
-            2 2 2 . 3 3 3 3 3 2 2 . . . . . 
-            . . 2 2 3 3 1 3 1 . . 8 8 . . . 
-            . . . . 1 3 3 3 3 . . 8 8 . . . 
-            . . . . 1 1 1 1 1 . . 8 8 . . . 
-            . 6 6 6 1 1 1 1 1 . . 8 8 . . . 
-            6 6 6 6 6 1 1 1 1 . 8 8 . . . . 
-            6 6 5 5 5 6 1 1 . . 8 8 . . . . 
-            5 5 6 6 6 6 5 5 . . 8 8 . . . . 
-            6 6 6 6 5 5 7 7 7 7 7 7 . . . . 
-            6 6 5 5 7 7 7 7 7 7 7 4 . . . . 
-            5 5 7 7 7 7 7 7 7 8 7 . . . . . 
-            6 6 6 6 7 6 7 . . 8 7 . . . . . 
-            6 6 6 6 6 6 6 . . 8 8 . . . . . 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . 2 . 2 . . . 
-            2 . 2 . . 3 3 3 . . 2 2 2 . . . 
-            2 2 2 . 3 3 3 3 3 2 2 . . . . . 
-            . . 2 2 3 3 1 3 1 . . . 8 8 . . 
-            . . . . 1 3 3 3 3 . . . 8 8 . . 
-            . . . . 1 1 1 1 1 . . 8 8 . . . 
-            . 6 6 6 1 1 1 1 1 . . 8 8 . . . 
-            6 6 6 6 6 1 1 1 1 . 8 8 . . . . 
-            6 6 5 5 5 6 1 1 . . 8 8 . . . . 
-            5 5 6 6 6 6 5 5 . 8 8 . . . . . 
-            6 6 6 6 5 5 6 6 . 8 8 . . . . . 
-            6 6 5 5 7 7 7 7 7 7 7 7 . . . . 
-            5 5 7 7 7 7 7 7 7 7 7 4 . . . . 
-            6 6 7 6 7 7 7 7 7 8 7 . . . . . 
-            6 6 6 6 7 6 7 . 8 8 7 . . . . . 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . 3 3 3 . . 2 . 2 . . . 
-            2 . 2 . 3 3 3 3 3 . 2 2 2 . . . 
-            2 2 2 . 3 3 1 3 1 2 2 . . . . . 
-            . . 2 2 1 3 3 3 3 . . 8 8 8 . . 
-            . . . . 1 1 1 1 1 . . 8 8 8 . . 
-            . . . . 1 1 1 1 1 . . 8 8 . . . 
-            . 6 6 6 6 1 1 1 1 . . 8 8 . . . 
-            6 6 6 6 6 5 1 1 . . 8 8 . . . . 
-            6 6 5 5 5 6 6 6 . . 8 8 . . . . 
-            5 5 6 6 6 6 5 5 . 8 8 8 . . . . 
-            6 6 6 6 5 5 7 7 7 7 7 7 . . . . 
-            6 6 5 5 7 7 7 7 7 7 7 4 . . . . 
-            5 5 7 7 7 7 7 7 7 8 7 . . . . . 
-            6 6 6 7 7 7 7 7 8 8 7 . . . . . 
-            6 6 6 6 6 6 6 . 8 8 8 . . . . . 
-            `], assets.tile`transparency16`)
+        if (oldmanAlive) {
+            makeNpc(1, assets.tile`myTile15`, [img`
+                . . . . . . . . . . 2 . 2 . . . 
+                2 . 2 . . 3 3 3 . . 2 2 2 . . . 
+                2 2 2 . 3 3 3 3 3 2 2 . . . . . 
+                . . 2 2 3 3 1 3 1 . . . . . . . 
+                . . . . 1 3 3 3 3 . . 8 8 . . . 
+                . . . . 1 1 1 1 1 . . 8 8 . . . 
+                . . . . 1 1 1 1 1 . . 8 8 . . . 
+                . 6 6 6 6 1 1 1 1 . . 8 8 . . . 
+                6 6 6 6 6 5 1 1 . . 8 8 . . . . 
+                6 6 5 5 5 6 6 6 . . 8 8 . . . . 
+                5 5 6 6 6 6 5 5 . . 8 8 . . . . 
+                6 6 6 6 5 5 7 7 7 7 7 7 . . . . 
+                6 6 5 5 7 7 7 7 7 7 7 4 . . . . 
+                5 5 7 7 7 7 7 7 7 8 7 . . . . . 
+                6 6 6 6 7 6 7 . . 8 7 . . . . . 
+                6 6 6 6 6 6 6 . . 8 8 . . . . . 
+                `,img`
+                . . . . . . . . . . 2 . 2 . . . 
+                2 . 2 . . 3 3 3 . . 2 2 2 . . . 
+                2 2 2 . 3 3 3 3 3 2 2 . . . . . 
+                . . 2 2 3 3 1 3 1 . . . . . . . 
+                . . . . 1 3 3 3 3 . . 8 8 . . . 
+                . . . . 1 1 1 1 1 . . 8 8 . . . 
+                . . . . 1 1 1 1 1 . . 8 8 . . . 
+                . 6 6 6 6 1 1 1 1 . . 8 8 . . . 
+                6 6 6 6 6 5 1 1 . . 8 8 . . . . 
+                6 6 5 5 5 6 6 6 . . 8 8 . . . . 
+                5 5 6 6 6 6 5 5 . . 8 8 . . . . 
+                6 6 6 6 5 5 7 7 7 7 7 7 . . . . 
+                6 6 5 5 7 7 7 7 7 7 7 4 . . . . 
+                5 5 7 7 7 7 7 7 7 8 7 . . . . . 
+                6 6 6 6 7 6 7 . . 8 7 . . . . . 
+                6 6 6 6 6 6 6 . . 8 8 . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . 2 . 2 . . . 
+                2 . 2 . . 3 3 3 . . 2 2 2 . . . 
+                2 2 2 . 3 3 3 3 3 2 2 . . . . . 
+                . . 2 2 3 3 1 3 1 . . 8 8 . . . 
+                . . . . 1 3 3 3 3 . . 8 8 . . . 
+                . . . . 1 1 1 1 1 . . 8 8 . . . 
+                . 6 6 6 1 1 1 1 1 . . 8 8 . . . 
+                6 6 6 6 6 1 1 1 1 . 8 8 . . . . 
+                6 6 5 5 5 6 1 1 . . 8 8 . . . . 
+                5 5 6 6 6 6 5 5 . . 8 8 . . . . 
+                6 6 6 6 5 5 7 7 7 7 7 7 . . . . 
+                6 6 5 5 7 7 7 7 7 7 7 4 . . . . 
+                5 5 7 7 7 7 7 7 7 8 7 . . . . . 
+                6 6 6 6 7 6 7 . . 8 7 . . . . . 
+                6 6 6 6 6 6 6 . . 8 8 . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . 2 . 2 . . . 
+                2 . 2 . . 3 3 3 . . 2 2 2 . . . 
+                2 2 2 . 3 3 3 3 3 2 2 . . . . . 
+                . . 2 2 3 3 1 3 1 . . . 8 8 . . 
+                . . . . 1 3 3 3 3 . . . 8 8 . . 
+                . . . . 1 1 1 1 1 . . 8 8 . . . 
+                . 6 6 6 1 1 1 1 1 . . 8 8 . . . 
+                6 6 6 6 6 1 1 1 1 . 8 8 . . . . 
+                6 6 5 5 5 6 1 1 . . 8 8 . . . . 
+                5 5 6 6 6 6 5 5 . 8 8 . . . . . 
+                6 6 6 6 5 5 6 6 . 8 8 . . . . . 
+                6 6 5 5 7 7 7 7 7 7 7 7 . . . . 
+                5 5 7 7 7 7 7 7 7 7 7 4 . . . . 
+                6 6 7 6 7 7 7 7 7 8 7 . . . . . 
+                6 6 6 6 7 6 7 . 8 8 7 . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . 3 3 3 . . 2 . 2 . . . 
+                2 . 2 . 3 3 3 3 3 . 2 2 2 . . . 
+                2 2 2 . 3 3 1 3 1 2 2 . . . . . 
+                . . 2 2 1 3 3 3 3 . . 8 8 8 . . 
+                . . . . 1 1 1 1 1 . . 8 8 8 . . 
+                . . . . 1 1 1 1 1 . . 8 8 . . . 
+                . 6 6 6 6 1 1 1 1 . . 8 8 . . . 
+                6 6 6 6 6 5 1 1 . . 8 8 . . . . 
+                6 6 5 5 5 6 6 6 . . 8 8 . . . . 
+                5 5 6 6 6 6 5 5 . 8 8 8 . . . . 
+                6 6 6 6 5 5 7 7 7 7 7 7 . . . . 
+                6 6 5 5 7 7 7 7 7 7 7 4 . . . . 
+                5 5 7 7 7 7 7 7 7 8 7 . . . . . 
+                6 6 6 7 7 7 7 7 8 8 7 . . . . . 
+                6 6 6 6 6 6 6 . 8 8 8 . . . . . 
+                `], assets.tile`transparency16`)
+        }
         mySprite4 = sprites.create(img`
             ................................................................
             ................................................................
@@ -2810,6 +2844,112 @@ function createlevel (num: number) {
             . . . . . . . . . 7 . . 7 . . . 
             . . . . . . . . . 7 . . 7 . . . 
             `], assets.tile`transparency16`)
+        makeNpc(7, assets.tile`myTile76`, [img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . 5 . 5 . . . . . 
+            . . . . . . . 4 5 5 5 . . . . . 
+            . . . . . . 4 5 5 5 5 . . . . . 
+            . . . . . . 4 5 3 5 3 . . . . . 
+            . . . . . . 4 5 3 5 3 . . . . . 
+            . . . . . . . 5 5 5 . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . 5 5 5 5 5 . . . . . 
+            . . . . . 5 6 6 6 6 6 . . . . . 
+            . . . . . 6 6 6 6 6 6 . . . . . 
+            . . . . . 6 6 6 6 6 4 . . . . . 
+            . . . . . 4 7 6 6 6 . 7 . . . . 
+            . . . . . . 7 7 . 7 7 . 7 . . . 
+            . . . . . . 7 . . 7 . . . 7 . . 
+            . . . . . . 7 . . 7 . . . . 7 . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . 5 . 5 . . . . . 
+            . . . . . . . 4 5 5 5 . . . . . 
+            . . . . . . 4 5 5 5 5 . . . . . 
+            . . . . . . 4 5 3 5 3 . . . . . 
+            . . . . . . 4 5 5 5 5 . . . . . 
+            . . . . . . . 5 5 5 . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . 5 5 5 5 5 . . . . . 
+            . . . . . 5 6 6 6 6 6 . . . . . 
+            . . . . . 6 6 6 6 6 6 . . . . . 
+            . . . . . 6 6 6 6 6 4 . . . . . 
+            . . . . . 4 7 6 7 7 . 7 . . . . 
+            . . . . . . 7 7 . 7 7 . 7 . . . 
+            . . . . . . 7 . . 7 . . . 7 . . 
+            . . . . . . 7 . . 7 . . . . 7 . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . 5 . 5 . . . . . 
+            . . . . . . . 4 5 5 5 . . . . . 
+            . . . . . . 4 5 5 5 5 . . . . . 
+            . . . . . . 4 5 3 5 3 . . . . . 
+            . . . . . . 4 5 5 5 5 . . . . . 
+            . . . . . . . 5 5 5 . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . 5 5 5 5 5 . . . . . 
+            . . . . . 5 6 6 6 6 6 . . . . . 
+            . . . . . 6 6 6 6 6 4 . . . . . 
+            . . . . . 4 7 6 6 6 4 . . . . . 
+            . . . . . 4 7 6 7 7 . 7 . . . . 
+            . . . . . . 7 7 . 7 7 . 7 . . . 
+            . . . . . . 7 . . 7 . . . 7 . . 
+            . . . . . . 7 . . 7 . . . . 7 . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . 5 . 5 . . . . . 
+            . . . . . . . 4 5 5 5 . . . . . 
+            . . . . . . 4 5 5 5 5 . . . . . 
+            . . . . . . 4 5 3 5 3 . . . . . 
+            . . . . . . 4 5 5 5 5 . . . . . 
+            . . . . . . . 5 5 5 . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . 5 5 5 5 5 . . . . . 
+            . . . . . 5 6 6 6 6 6 . . . . . 
+            . . . . . 6 6 6 6 6 4 . . . . . 
+            . . . . . 4 7 6 6 6 4 . . . . . 
+            . . . . . 4 7 7 7 7 . 7 . . . . 
+            . . . . . . 7 7 . 7 7 . 7 . . . 
+            . . . . . . 7 . . 7 . . . 7 . . 
+            . . . . . . 7 . . 7 . . . . 7 . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . 5 . 5 . . . . . 
+            . . . . . . . 4 5 5 5 . . . . . 
+            . . . . . . 4 5 5 5 5 . . . . . 
+            . . . . . . 4 5 3 5 3 . . . . . 
+            . . . . . . 4 5 5 5 5 . . . . . 
+            . . . . . . . 5 5 5 . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . 5 5 5 5 5 . . . . . 
+            . . . . . 5 6 6 6 6 6 . . . . . 
+            . . . . . 6 6 6 6 6 4 . . . . . 
+            . . . . . 4 7 6 6 6 4 . . . . . 
+            . . . . . 4 7 7 . 7 . 7 . . . . 
+            . . . . . . 7 . . 7 7 . 7 . . . 
+            . . . . . . 7 . . 7 . . . 7 . . 
+            `], assets.tile`myTile43`)
+        overlaytilewith(assets.tile`myTile74`, assets.tile`myTile74`)
+        overlaytilewith(assets.tile`myTile75`, assets.tile`myTile75`)
+        overlaytilewith(assets.tile`myTile77`, img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
+            8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
+            8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
+            8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
+            8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
+            8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
+            8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
+            8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
+            8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
+            8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
+            8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
+            8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
+            `)
     } else if (num == 100) {
         tiles.setCurrentTilemap(tilemap`level6`)
         tileUtil.replaceAllTiles(assets.tile`myTile50`, img`
@@ -3215,6 +3355,17 @@ function createlevel (num: number) {
             . . . . . 8 . . 8 . . . . . . . 
             . . . . . 8 . . 8 . . . . . . . 
             `], assets.tile`myTile26`)
+        if (false) {
+            item_can_pick_up(assets.tile`myTile5`, 1, assets.tile`myTile80`)
+            item_can_pick_up(assets.tile`myTile5`, 5, assets.tile`myTile81`)
+            item_can_pick_up(assets.tile`myTile5`, 7, assets.tile`myTile82`)
+            item_can_pick_up(assets.tile`myTile5`, 8, assets.tile`myTile83`)
+        }
+    } else if (num == 200) {
+        snow_onoff = false
+        tiles.setCurrentTilemap(tilemap`level7`)
+        summon_enemy(assets.tile`transparency16`, "bug_1")
+        item_can_pick_up(assets.tile`transparency16`, 1, assets.tile`myTile80`)
     }
     if (false) {
         for (let value of tiles.getTilesByType(assets.tile`myTile16`)) {
@@ -3429,6 +3580,24 @@ function createlevel (num: number) {
             tiles.placeOnTile(mySprite4, value)
         }
     }
+    overlaytilewith(assets.tile`myTile30`, img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . 1 1 1 . . . . . . 1 1 
+        1 1 . . 1 1 1 1 1 . . . 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 8 8 8 8 8 8 1 1 1 8 8 8 8 
+        8 1 8 8 8 8 8 8 8 8 1 8 8 8 8 8 
+        . 1 8 . 8 8 . 8 8 . 8 8 . 8 8 . 
+        . 8 . . 8 . . 8 . . 8 . . 8 . . 
+        . 8 . . 8 . . 8 . . 8 . . 8 . . 
+        . 8 . . 8 . . 8 . . 8 . . 8 . . 
+        . 8 . . 8 . . 8 . . 8 . . 8 . . 
+        . 8 . . 8 . . 8 . . 8 . . 8 . . 
+        . 8 . . 8 . . 8 . . 8 . . 8 . . 
+        `)
     for (let value of tiles.getTilesByType(assets.tile`myTile30`)) {
         mySprite5 = sprites.create(img`
             . . . . . . . . . . . . . . . . 
@@ -4486,12 +4655,14 @@ function createplayer () {
     )
     mySprite.x += 3
     platformer.setCharacterAnimationsEnabled(mySprite, true)
-    platformer.setConstantDefault(platformer.PlatformerConstant.InAirJumps, 1)
     platformer.setConstantDefault(platformer.PlatformerConstant.InAirJumpHeight, 40)
     platformer.setConstantDefault(platformer.PlatformerConstant.WallFriction, 200)
     platformer.setConstantDefault(platformer.PlatformerConstant.WallMinVelocity, 10)
     platformer.setConstantDefault(platformer.PlatformerConstant.WallJumpKickoffVelocity, 150)
-    platformer.setFeatureEnabled(platformer.PlatformerFeatures.WallJumps, true)
+    if (true) {
+        platformer.setFeatureEnabled(platformer.PlatformerFeatures.WallJumps, false)
+        platformer.setConstantDefault(platformer.PlatformerConstant.InAirJumps, 1)
+    }
     platformer.setGravity(500)
     attack_hitbox = sprites.create(img`
         ..................................................
@@ -7443,14 +7614,7 @@ function hadle_items () {
         ................
         `, "b", 8)
     if (!(blockSettings.exists("the invantory"))) {
-        blockSettings.writeNumberArray("the invantory", [
-        0,
-        1,
-        5,
-        7,
-        8,
-        4
-        ])
+        blockSettings.writeNumberArray("the invantory", [0])
         blockSettings.writeNumber("theAbutton", -1)
         blockSettings.writeNumber("thecloakslot", 6)
         blockSettings.writeNumber("theBbutton", -1)
@@ -7477,20 +7641,28 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 browserEvents.V.onEvent(browserEvents.KeyEvent.Pressed, function () {
     if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile56`)) {
-        if (mySprite.tilemapLocation().column == 4) {
-            move_into_house(100, 1)
-        } else if (mySprite.tilemapLocation().column == 23) {
-            move_into_house(100, 2)
-        } else if (mySprite.tilemapLocation().column == 39) {
-            move_into_house(100, 3)
+        if (zone == 2) {
+            if (mySprite.tilemapLocation().column == 4) {
+                move_into_house(100, 1)
+            } else if (mySprite.tilemapLocation().column == 23) {
+                move_into_house(100, 2)
+            } else if (mySprite.tilemapLocation().column == 39) {
+                move_into_house(100, 3)
+            }
         }
     } else if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile65`)) {
-        if (mySprite.tilemapLocation().column == 7) {
-            move_into_house(2, 1)
-        } else if (mySprite.tilemapLocation().column == 22) {
-            move_into_house(2, 2)
-        } else if (mySprite.tilemapLocation().column == 28) {
-            move_into_house(2, 3)
+        if (zone == 100) {
+            if (mySprite.tilemapLocation().column == 7) {
+                move_into_house(2, 1)
+            } else if (mySprite.tilemapLocation().column == 22) {
+                move_into_house(2, 2)
+            } else if (mySprite.tilemapLocation().column == 28) {
+                move_into_house(2, 3)
+            }
+        }
+    } else if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile13`)) {
+        if (zone == 200) {
+            move_into_house(2, 4)
         }
     }
 })
@@ -7531,6 +7703,13 @@ function move_selector (num: number, text: string) {
         Refresh_invantory()
     }
 }
+function overlaytilewith (myImage: Image, myImage2: Image) {
+    for (let value of tiles.getTilesByType(myImage)) {
+        mySprite5 = sprites.create(myImage2, SpriteKind.background)
+        tiles.placeOnTile(mySprite5, value)
+        mySprite5.z = 5
+    }
+}
 function START_CUTSENSE () {
     incutesence = true
     path = TilemapPath.create_path([tiles.getTileLocation(36, 3), tiles.getTileLocation(36, 13)])
@@ -7543,9 +7722,10 @@ function START_CUTSENSE () {
     }
     TilemapPath.follow_path(cam, path, 50)
     MakeNPCText("Hello young one")
-    MakeNPCText("I think its about time for you to go out into the world")
-    MakeNPCText("Frist there is stil some stuff I need to teach you")
-    MakeNPCText("Use the E button to open your inventory")
+    MakeNPCText("My time here is almost over")
+    MakeNPCText("Before I go I want you to have this")
+    MakeNPCText("Sword acquired")
+    MakeNPCText("Use the E Key to open your inventory")
     MakeNPCText("then on your sword click Z to equip it")
     can_open_menu = true
     while (!(menu_open && theAbutton == 0)) {
@@ -7554,14 +7734,130 @@ function START_CUTSENSE () {
     }
     can_open_menu = false
     MakeNPCText("Ah you seam to have gotten the hang of things")
-    MakeNPCText("Now if you use the a button you can swing you sword")
-    MakeNPCText("And you can use up arrow to jump.")
-    MakeNPCText("If you head stright form here, you will hit a small town")
+    MakeNPCText("Now if you use the C key you can swing you sword")
+    MakeNPCText("You can also use X to run and you can use Z key to jump.")
+    MakeNPCText("If you head stright form here, you will get to a small town")
     MakeNPCText("There you might be able to learn some more things")
-    MakeNPCText("I've tought you everything i can, now go forword into the world young one")
+    MakeNPCText("Goodbye child my you stay safe on your adventure")
+    extraEffects.createSpreadEffectOnAnchor(aNPC, extraEffects.createSingleColorSpreadEffectData(5, ExtraEffectPresetShape.Cloud), 2000, 26, 16)
+    sprites.destroy(aNPC)
     create_ui()
     canrun = true
     incutesence = false
+}
+function item_can_pick_up (myImage: Image, num: number, myImage2: Image) {
+    Items_picked_Up = true
+    for (let value of theinvantorylist) {
+        if (value == num) {
+            Items_picked_Up = false
+        }
+    }
+    if (theBbuttonitem == num) {
+    	
+    } else if (thetalismanslotvar == num) {
+    	
+    } else if (theAbutton == num) {
+    	
+    }
+    for (let value of tiles.getTilesByType(myImage2)) {
+        if (Items_picked_Up) {
+            mySprite6 = sprites.create(img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                `, SpriteKind.item)
+            animation.runImageAnimation(
+            mySprite6,
+            [img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . 3 3 . . . . . . . 
+                . . . . . . 3 1 2 3 . . . . . . 
+                . . . . . . 3 1 1 3 . . . . . . 
+                . . . 3 3 3 2 1 1 2 3 3 3 . . . 
+                . . 3 3 2 1 1 1 1 1 1 2 3 3 . . 
+                . . 3 2 1 1 1 1 1 1 1 1 2 3 . . 
+                . . . 3 2 1 1 1 1 1 1 2 3 . . . 
+                . . . . 3 1 1 1 1 1 1 3 . . . . 
+                . . . . 3 2 1 1 1 1 2 3 . . . . 
+                . . . . 3 3 2 3 3 2 3 3 . . . . 
+                . . . . . 3 3 . . 3 3 . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . 3 3 . . . . . . . 
+                . . . . . . 3 1 2 3 . . . . . . 
+                . . . . . . 3 1 1 3 . . . . . . 
+                . . . 3 3 3 2 1 1 2 3 3 3 . . . 
+                . . 3 3 2 1 1 1 1 1 1 2 3 3 . . 
+                . . 3 2 1 1 1 1 1 1 1 1 2 3 . . 
+                . . . 3 2 1 1 1 1 1 1 2 3 . . . 
+                . . . . 3 1 1 1 1 1 1 3 . . . . 
+                . . . . 3 2 1 1 1 1 2 3 . . . . 
+                . . . . 3 3 2 3 3 2 3 3 . . . . 
+                . . . . . 3 3 . . 3 3 . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . 3 3 . . . . . . . 
+                . . . . . . 3 1 2 3 . . . . . . 
+                . . . . . . 3 1 1 3 . . . . . . 
+                . . . 3 3 3 2 1 1 2 3 3 3 . . . 
+                . . 3 3 2 1 1 1 1 1 1 2 3 3 . . 
+                . . 3 2 1 1 1 1 1 1 1 1 2 3 . . 
+                . . . 3 2 1 1 1 1 1 1 2 3 . . . 
+                . . . . 3 1 1 1 1 1 1 3 . . . . 
+                . . . . 3 2 1 1 1 1 2 3 . . . . 
+                . . . . 3 3 2 3 3 2 3 3 . . . . 
+                . . . . . 3 3 . . 3 3 . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . 3 3 . . . . . . . 
+                . . . . . . 3 1 2 3 . . . . . . 
+                . . . . . . 3 1 1 3 . . . . . . 
+                . . . 3 3 3 2 1 1 2 3 3 3 . . . 
+                . . 3 3 2 1 1 1 1 1 1 2 3 3 . . 
+                . . 3 2 1 1 1 1 1 1 1 1 2 3 . . 
+                . . . 3 2 1 1 1 1 1 1 2 3 . . . 
+                . . . . 3 1 1 1 1 1 1 3 . . . . 
+                . . . . 3 2 1 1 1 1 2 3 . . . . 
+                . . . . 3 3 2 3 3 2 3 3 . . . . 
+                . . . . . 3 3 . . 3 3 . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                `],
+            200,
+            true
+            )
+            sprites.setDataNumber(mySprite6, "what_item_it_it_is", num)
+            tiles.placeOnTile(mySprite6, value)
+        }
+        tiles.setTileAt(value, myImage)
+    }
 }
 function main_menu () {
     mainstartmenu = true
@@ -7636,6 +7932,10 @@ function moveBeteewnleveles () {
         if (mySprite.tilemapLocation().column == 0 && mySprite.isHittingTile(CollisionDirection.Left)) {
             createlevel(1)
             tiles.placeOnTile(mySprite, tiles.getTileLocation(81, 19))
+        }
+        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile75`) || (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile74`) || mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile77`))) {
+            createlevel(200)
+            tiles.placeOnTile(mySprite, tiles.getTileLocation(11, 4))
         }
     }
 }
@@ -7866,6 +8166,8 @@ function create_invantory () {
 }
 let selected_item = 0
 let selceontype = ""
+let mySprite6: Sprite = null
+let Items_picked_Up = false
 let aNPC: Sprite = null
 let path: TilemapPath.TilemapPath = null
 let items_names: string[] = []
@@ -7888,8 +8190,8 @@ let theAbutton = 0
 let Invantory_Y: number[] = []
 let invantory_X: number[] = []
 let item_type: string[] = []
-let theinvantorylist: number[] = []
 let number = 0
+let theinvantorylist: number[] = []
 let maxPLayerLife = 0
 let playerlife = 0
 let items_images: Image[] = []
@@ -7908,11 +8210,14 @@ let inattack = false
 let enemysprite: Sprite = null
 let canrun = false
 let cam: Sprite = null
+let oldmanAlive = false
 let assests: Image[] = []
 let menu_open = false
 let can_open_menu = false
 let camFallowPlayer = false
 let lockcontrols = false
+let snow_onoff = false
+snow_onoff = true
 color.setColor(15, color.parseColorString("#180920"))
 color.setColor(9, color.parseColorString("#180920"))
 scene.setBackgroundColor(9)
@@ -8439,7 +8744,9 @@ let map_layouts = [img`
     ..................................................
     ..................................................
     `]
+oldmanAlive = true
 createlevel(0)
+oldmanAlive = false
 create_invantory()
 hadle_items()
 if (true) {
@@ -9184,14 +9491,6 @@ forever(function () {
         }
     }
 })
-game.onUpdate(function () {
-    if (camFallowPlayer) {
-        cam.x = mySprite.x
-        cam.y = mySprite.y
-    }
-    attack_hitbox.x = mySprite.x
-    attack_hitbox.y = mySprite.y
-})
 forever(function () {
     if (!(incutesence)) {
         handle_npc_intractions()
@@ -9692,10 +9991,20 @@ forever(function () {
         }
     }
 })
+game.onUpdate(function () {
+    if (camFallowPlayer) {
+        cam.x = mySprite.x
+        cam.y = mySprite.y
+    }
+    attack_hitbox.x = mySprite.x
+    attack_hitbox.y = mySprite.y
+})
 forever(function () {
     if (blockSettings.readNumber("paformacemode") == 1) {
-        extraEffects.createSpreadEffectOnAnchor(cam, myEffect, 5000, 200, 20)
-        extraEffects.createSpreadEffectOnAnchor(cam, myEffect, 5000, 150, 20)
-        pause(2000)
+        if (snow_onoff) {
+            extraEffects.createSpreadEffectOnAnchor(cam, myEffect, 5000, 200, 20)
+            extraEffects.createSpreadEffectOnAnchor(cam, myEffect, 5000, 150, 20)
+            pause(2000)
+        }
     }
 })

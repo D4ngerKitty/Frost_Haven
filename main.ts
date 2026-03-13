@@ -265,10 +265,16 @@ function move_into_house (num: number, which_house: number) {
     if (num == 100) {
         if (which_house == 1) {
             tiles.placeOnTile(mySprite, tiles.getTileLocation(7, 25))
+            camlockedonplayer = false
+            tiles.placeOnTile(cam, tiles.getTileLocation(5, 25))
         } else if (which_house == 2) {
             tiles.placeOnTile(mySprite, tiles.getTileLocation(22, 11))
+            camlockedonplayer = false
+            tiles.placeOnTile(cam, tiles.getTileLocation(19, 11))
         } else if (which_house == 3) {
             tiles.placeOnTile(mySprite, tiles.getTileLocation(28, 26))
+            camlockedonplayer = false
+            tiles.placeOnTile(cam, tiles.getTileLocation(32, 26))
         }
     } else if (num == 2) {
         if (which_house == 1) {
@@ -7868,10 +7874,10 @@ function main_menu () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
+        . . . . . . 3 3 3 3 . . . . . . 
+        . . . . . . 3 3 3 3 . . . . . . 
+        . . . . . . 3 3 3 3 . . . . . . 
+        . . . . . . 3 3 3 3 . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -7879,6 +7885,9 @@ function main_menu () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.acam)
+    cam.setFlag(SpriteFlag.GhostThroughSprites, false)
+    cam.setFlag(SpriteFlag.Invisible, true)
+    cam.setFlag(SpriteFlag.GhostThroughWalls, true)
     scene.cameraFollowSprite(cam)
     tiles.placeOnTile(cam, tiles.getTileLocation(36, 3))
     main_menu_text = fancyText.create("Frost-Haven", 0, 2)
@@ -7899,6 +7908,15 @@ function main_menu () {
     tiles.placeOnTile(sprites.readDataSprite(main_menu_text, "4"), tiles.getTileLocation(36, 6))
     sprites.setDataNumber(main_menu_text, "menu_item_picked", 1)
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.acam, function (sprite, otherSprite) {
+    if (camFallowPlayer) {
+        camlockedonplayer = true
+        camlocked_untilplayer_overlap = false
+        if (zone == 200) {
+            camnotmoveonY = false
+        }
+    }
+})
 function update_this_lists () {
     if (true) {
         theinvantorylist = []
@@ -7936,6 +7954,26 @@ function moveBeteewnleveles () {
         if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile75`) || (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile74`) || mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile77`))) {
             createlevel(200)
             tiles.placeOnTile(mySprite, tiles.getTileLocation(21, 4))
+            cam.setImage(img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . 3 . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                `)
+            camnotmoveonY = true
+            tiles.placeOnTile(cam, tiles.getTileLocation(21, 14))
         }
     }
 }
@@ -8166,6 +8204,8 @@ function create_invantory () {
 }
 let selected_item = 0
 let selceontype = ""
+let camnotmoveonY = false
+let camlocked_untilplayer_overlap = false
 let mySprite6: Sprite = null
 let Items_picked_Up = false
 let aNPC: Sprite = null
@@ -8210,6 +8250,7 @@ let inattack = false
 let enemysprite: Sprite = null
 let canrun = false
 let cam: Sprite = null
+let camlockedonplayer = false
 let oldmanAlive = false
 let assests: Image[] = []
 let menu_open = false
@@ -8747,6 +8788,7 @@ let map_layouts = [img`
 oldmanAlive = true
 createlevel(0)
 oldmanAlive = false
+camlockedonplayer = true
 create_invantory()
 hadle_items()
 if (true) {
@@ -9491,6 +9533,52 @@ forever(function () {
         }
     }
 })
+game.onUpdate(function () {
+    if (camFallowPlayer) {
+        if (camlocked_untilplayer_overlap) {
+        	
+        } else if (camnotmoveonY) {
+            cam.x = mySprite.x
+            cam.follow(mySprite, 0)
+        } else {
+            cam.setImage(img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . 3 3 . . . . . . . 
+                . . . . . . . 3 3 . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                `)
+            if (camlockedonplayer) {
+                cam.x = mySprite.x
+                cam.y = mySprite.y
+                cam.follow(mySprite, 0)
+            } else {
+                if (spriteutils.distanceBetween(mySprite, cam) > 70) {
+                    cam.follow(mySprite, 300)
+                } else if (spriteutils.distanceBetween(mySprite, cam) > 40) {
+                    cam.follow(mySprite, 200)
+                } else if (spriteutils.distanceBetween(mySprite, cam) > 20) {
+                    cam.follow(mySprite, 150)
+                } else {
+                    cam.follow(mySprite)
+                }
+            }
+        }
+    }
+    attack_hitbox.x = mySprite.x
+    attack_hitbox.y = mySprite.y
+})
 forever(function () {
     if (!(incutesence)) {
         handle_npc_intractions()
@@ -9990,14 +10078,6 @@ forever(function () {
             }
         }
     }
-})
-game.onUpdate(function () {
-    if (camFallowPlayer) {
-        cam.x = mySprite.x
-        cam.y = mySprite.y
-    }
-    attack_hitbox.x = mySprite.x
-    attack_hitbox.y = mySprite.y
 })
 forever(function () {
     if (blockSettings.readNumber("paformacemode") == 1) {

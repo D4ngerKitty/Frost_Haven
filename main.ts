@@ -9,6 +9,7 @@ namespace SpriteKind {
     export const savepoint = SpriteKind.create()
     export const playerAttackHitboxType = SpriteKind.create()
     export const item = SpriteKind.create()
+    export const wall = SpriteKind.create()
 }
 function summon_enemy (tile_repaced: Image, ememy_type: string) {
     if (ememy_type == "bug_1") {
@@ -124,6 +125,22 @@ browserEvents.X.onEvent(browserEvents.KeyEvent.Pressed, function () {
         }
     }
 })
+function handle_walls_and_envorment_intractions () {
+    if (zone == 201) {
+        if (mySprite.tilemapLocation().column == 11) {
+            if (!(wallsactive)) {
+                wallsactive = true
+                timer.background(function () {
+                    for (let value of sprites.allOfKind(SpriteKind.wall)) {
+                        wall_number += -1
+                        sprites.readDataSprite(wallcontrol, "" + wall_number + "wall").ay = 200
+                        pause(100)
+                    }
+                })
+            }
+        }
+    }
+}
 browserEvents.ArrowUp.onEvent(browserEvents.KeyEvent.Pressed, function () {
     if (!(menu_open)) {
         move_selector(-4, "up")
@@ -659,11 +676,13 @@ function addXandY (x: number, y: number) {
 }
 function createlevel (num: number) {
     snow_onoff = true
+    wallsactive = false
     sprites.destroyAllSpritesOfKind(SpriteKind.npc)
     sprites.destroyAllSpritesOfKind(SpriteKind.background)
     sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
     sprites.destroyAllSpritesOfKind(SpriteKind.savepoint)
     sprites.destroyAllSpritesOfKind(SpriteKind.item)
+    sprites.destroyAllSpritesOfKind(SpriteKind.wall)
     zone = num
     if (num == 0) {
         tiles.setCurrentTilemap(tilemap`level3`)
@@ -3372,6 +3391,51 @@ function createlevel (num: number) {
         tiles.setCurrentTilemap(tilemap`level7`)
         summon_enemy(assets.tile`transparency16`, "bug_1")
         item_can_pick_up(assets.tile`transparency16`, 1, assets.tile`myTile80`)
+    } else if (num == 201) {
+        snow_onoff = false
+        tiles.setCurrentTilemap(tilemap`level8`)
+        wallcontrol = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.background)
+        wall_number = 0
+        for (let value of tiles.getTilesByType(assets.tile`myTile85`)) {
+            sprites.setDataSprite(wallcontrol, "" + wall_number + "wall", sprites.create(img`
+                7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 
+                7 8 8 8 8 8 8 8 8 8 8 8 8 8 8 7 
+                7 8 8 8 8 8 8 8 8 8 8 8 8 8 8 7 
+                7 7 7 7 8 8 8 8 8 8 8 8 7 7 7 7 
+                7 8 8 8 8 7 7 7 7 7 7 8 8 8 8 7 
+                7 8 8 8 7 7 7 7 7 7 7 7 8 8 8 7 
+                7 7 7 8 7 8 8 7 7 8 8 7 8 7 7 7 
+                7 8 8 8 7 8 8 7 7 8 8 7 8 8 8 7 
+                7 8 8 8 7 8 7 7 7 7 8 7 8 8 8 7 
+                7 7 7 8 7 7 7 7 7 7 7 7 8 7 7 7 
+                7 8 8 8 8 7 7 7 7 7 7 8 8 8 8 7 
+                7 8 8 8 8 7 8 7 7 8 7 8 8 8 8 7 
+                7 7 7 7 8 8 8 8 8 8 8 8 7 7 7 7 
+                7 8 8 8 8 8 8 8 8 8 8 8 8 8 8 7 
+                7 8 8 8 8 8 8 8 8 8 8 8 8 8 8 7 
+                7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 
+                `, SpriteKind.wall))
+            tiles.placeOnTile(sprites.readDataSprite(wallcontrol, "" + wall_number + "wall"), value)
+            wall_number += 1
+            tiles.setTileAt(value, assets.tile`myTile3`)
+        }
     }
     if (false) {
         for (let value of tiles.getTilesByType(assets.tile`myTile16`)) {
@@ -4667,7 +4731,7 @@ function createplayer () {
     platformer.setConstantDefault(platformer.PlatformerConstant.WallJumpKickoffVelocity, 150)
     if (true) {
         platformer.setFeatureEnabled(platformer.PlatformerFeatures.WallJumps, false)
-        platformer.setConstantDefault(platformer.PlatformerConstant.InAirJumps, 1)
+        platformer.setConstantDefault(platformer.PlatformerConstant.InAirJumps, 0)
     }
     platformer.setGravity(500)
     attack_hitbox = sprites.create(img`
@@ -7635,6 +7699,13 @@ function hadle_items () {
     update_this_lists()
     Refresh_invantory()
 }
+scene.onHitWall(SpriteKind.wall, function (sprite, location) {
+    if (!(spriteutils.isDestroyed(wallcontrol))) {
+        tiles.setWallAt(location.getNeighboringLocation(CollisionDirection.Top), true)
+        tiles.setTileAt(location.getNeighboringLocation(CollisionDirection.Top), assets.tile`myTile84`)
+        sprites.destroy(sprite)
+    }
+})
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     if (!(menu_open)) {
         move_selector(-1, "left")
@@ -7976,6 +8047,18 @@ function moveBeteewnleveles () {
             tiles.placeOnTile(cam, tiles.getTileLocation(21, 14))
         }
     }
+    if (zone == 200) {
+        if (mySprite.tilemapLocation().column == 59 && mySprite.isHittingTile(CollisionDirection.Right)) {
+            createlevel(201)
+            tiles.placeOnTile(mySprite, tiles.getTileLocation(0, 15))
+        }
+    }
+    if (zone == 201) {
+        if (mySprite.tilemapLocation().column == 0 && mySprite.isHittingTile(CollisionDirection.Left)) {
+            createlevel(200)
+            tiles.placeOnTile(mySprite, tiles.getTileLocation(59, 15))
+        }
+    }
 }
 function add_item (text: string, myImage: Image, text2: string, num: number) {
     items_images.push(myImage)
@@ -8239,10 +8322,13 @@ let invantory: Sprite = null
 let NPCtext: fancyText.TextSprite = null
 let incutesence = false
 let thelifesprtie: Sprite = null
-let zone = 0
 let mySprite3: Sprite = null
 let main_menu_text: fancyText.TextSprite = null
 let mainstartmenu = false
+let wallcontrol: Sprite = null
+let wall_number = 0
+let wallsactive = false
+let zone = 0
 let dashes = 0
 let mySprite: Sprite = null
 let indash = false
@@ -10079,6 +10165,7 @@ forever(function () {
     selceontype = item_type[sprites.readDataNumber(sprites.readDataSprite(invantory, "" + sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection")), "item_id")]
     selected_item = sprites.readDataNumber(sprites.readDataSprite(invantory, "sealector"), "selection")
     moveBeteewnleveles()
+    handle_walls_and_envorment_intractions()
 })
 forever(function () {
     if (blockSettings.readNumber("paformacemode") == 1) {
